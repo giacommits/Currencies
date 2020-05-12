@@ -1,0 +1,70 @@
+{
+  
+    "CAD":    "Canadian Dollar",
+  
+    "HKD":    "Hong Kong Dollar",
+  
+    "ISK":    "Iceland Korona",
+
+    "PHP":    "Philippines Peso",
+  
+    "DKK":    "Denmark Krone",
+  
+    "HUF":    "Hungarian Forint",
+  
+    "CZK":    "Czech Koruna",
+  
+    "AUD":    "Australian Dollar",
+  
+    "RON":    "Romanian Leu",
+  
+    "SEK":    "Sweden Krona",
+  
+    "IDR":    "Indonesian Rupiah",
+  
+    "INR":    "Indian Rupee",
+  
+    "BRL":    "Brazilian Real",
+  
+    "RUB":    "Russian Ruble",
+  
+    "HRK":   "Croatian Runa",
+  
+    "JPY":    "Japanese Yen",
+  
+    "THB":    "Thai Baht",
+  
+    "CHF":    "Swiss Franc",
+  
+    "SGD":    "Singapur Dolar",
+  
+    "PLN":    "Polish Zloty",
+  
+    "BGN":    "Bulgarian Lev",
+  
+    "TRY":    "Turkish Lira",
+  
+    "CNY":    "Chinese Yuan",
+  
+    "NOK":    "Norwegian Krone",
+  
+    "NZD":    "New Zealand Dollar",
+  
+    "ZAR":    "South African Rand",
+  
+    "USD":    "US Dolar",
+  
+    "MXN":    "Mexican Peso",
+  
+    "ILS":    "Israeli Shekel",
+  
+    "GBP":    "British Pound",
+  
+    "KRW":    "South Korean Won",
+  
+    "MYR":    "Malasyan Ringgit",
+  
+    "EUR":    "Euro"
+  
+
+}

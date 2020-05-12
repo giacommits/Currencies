@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CurrenciesDbContext.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Currencies">
+          <Key>
+            <PropertyRef Name="CurrencyId" />
+          </Key>
+          <Property Name="CurrencyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ISO_Code" Type="varchar" MaxLength="3" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="CurrenciesExchangeRate">
+          <Key>
+            <PropertyRef Name="CurrenciesExchangeRateId" />
+          </Key>
+          <Property Name="CurrenciesExchangeRateId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BaseCurrencyId" Type="int" Nullable="false" />
+          <Property Name="QuoteCurrencyId" Type="int" Nullable="false" />
+          <Property Name="RateDate" Type="date" Nullable="false" />
+          <Property Name="ExchangeRate" Type="decimal" Precision="20" Scale="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Currencie__BaseC__276EDEB3">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="CurrenciesExchangeRate" Type="Self.CurrenciesExchangeRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="CurrencyId" />
+            </Principal>
+            <Dependent Role="CurrenciesExchangeRate">
+              <PropertyRef Name="BaseCurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Currencie__Quote__286302EC">
+          <End Role="Currencies" Type="Self.Currencies" Multiplicity="1" />
+          <End Role="CurrenciesExchangeRate" Type="Self.CurrenciesExchangeRate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Currencies">
+              <PropertyRef Name="CurrencyId" />
+            </Principal>
+            <Dependent Role="CurrenciesExchangeRate">
+              <PropertyRef Name="QuoteCurrencyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CurrenciesDbContextStoreContainer">
+          <EntitySet Name="Currencies" EntityType="Self.Currencies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CurrenciesExchangeRate" EntityType="Self.CurrenciesExchangeRate" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Currencie__BaseC__276EDEB3" Association="Self.FK__Currencie__BaseC__276EDEB3">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesExchangeRate" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Currencie__Quote__286302EC" Association="Self.FK__Currencie__Quote__286302EC">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesExchangeRate" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CurrenciesDbContext" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Currency">
+          <Key>
+            <PropertyRef Name="CurrencyId" />
+          </Key>
+          <Property Name="CurrencyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ISO_Code" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="CurrenciesExchangeRates" Relationship="Self.FK__Currencie__BaseC__276EDEB3" FromRole="Currencies" ToRole="CurrenciesExchangeRate" />
+          <NavigationProperty Name="CurrenciesExchangeRates1" Relationship="Self.FK__Currencie__Quote__286302EC" FromRole="Currencies" ToRole="CurrenciesExchangeRate" />
+        </EntityType>
+        <EntityType Name="CurrenciesExchangeRate">
+          <Key>
+            <PropertyRef Name="CurrenciesExchangeRateId" />
+          </Key>
+          <Property Name="CurrenciesExchangeRateId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RateDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ExchangeRate" Type="Decimal" Precision="20" Scale="10" Nullable="false" />
+          <NavigationProperty Name="BaseCurrency" Relationship="Self.FK__Currencie__BaseC__276EDEB3" FromRole="CurrenciesExchangeRate" ToRole="Currencies" />
+          <NavigationProperty Name="QuoteCurrency" Relationship="Self.FK__Currencie__Quote__286302EC" FromRole="CurrenciesExchangeRate" ToRole="Currencies" />
+        </EntityType>
+        <Association Name="FK__Currencie__BaseC__276EDEB3">
+          <End Role="Currencies" Type="Self.Currency" Multiplicity="1" />
+          <End Role="CurrenciesExchangeRate" Type="Self.CurrenciesExchangeRate" Multiplicity="*" />
+        </Association>
+        <Association Name="FK__Currencie__Quote__286302EC">
+          <End Role="Currencies" Type="Self.Currency" Multiplicity="1" />
+          <End Role="CurrenciesExchangeRate" Type="Self.CurrenciesExchangeRate" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="CurrenciesDb" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Currencies" EntityType="Self.Currency" />
+          <EntitySet Name="CurrenciesExchangeRates" EntityType="Self.CurrenciesExchangeRate" />
+          <AssociationSet Name="FK__Currencie__BaseC__276EDEB3" Association="Self.FK__Currencie__BaseC__276EDEB3">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesExchangeRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Currencie__Quote__286302EC" Association="Self.FK__Currencie__Quote__286302EC">
+            <End Role="Currencies" EntitySet="Currencies" />
+            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesExchangeRates" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CurrenciesDbContextStoreContainer" CdmEntityContainer="CurrenciesDb">
+          <EntitySetMapping Name="Currencies">
+            <EntityTypeMapping TypeName="CurrenciesDbContext.Currency">
+              <MappingFragment StoreEntitySet="Currencies">
+                <ScalarProperty Name="CurrencyId" ColumnName="CurrencyId" />
+                <ScalarProperty Name="ISO_Code" ColumnName="ISO_Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CurrenciesExchangeRates">
+            <EntityTypeMapping TypeName="CurrenciesDbContext.CurrenciesExchangeRate">
+              <MappingFragment StoreEntitySet="CurrenciesExchangeRate">
+                <ScalarProperty Name="CurrenciesExchangeRateId" ColumnName="CurrenciesExchangeRateId" />
+                <ScalarProperty Name="RateDate" ColumnName="RateDate" />
+                <ScalarProperty Name="ExchangeRate" ColumnName="ExchangeRate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK__Currencie__BaseC__276EDEB3" TypeName="CurrenciesDbContext.FK__Currencie__BaseC__276EDEB3" StoreEntitySet="CurrenciesExchangeRate">
+            <EndProperty Name="Currencies">
+              <ScalarProperty Name="CurrencyId" ColumnName="BaseCurrencyId" />
+            </EndProperty>
+            <EndProperty Name="CurrenciesExchangeRate">
+              <ScalarProperty Name="CurrenciesExchangeRateId" ColumnName="CurrenciesExchangeRateId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK__Currencie__Quote__286302EC" TypeName="CurrenciesDbContext.FK__Currencie__Quote__286302EC" StoreEntitySet="CurrenciesExchangeRate">
+            <EndProperty Name="Currencies">
+              <ScalarProperty Name="CurrencyId" ColumnName="QuoteCurrencyId" />
+            </EndProperty>
+            <EndProperty Name="CurrenciesExchangeRate">
+              <ScalarProperty Name="CurrenciesExchangeRateId" ColumnName="CurrenciesExchangeRateId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

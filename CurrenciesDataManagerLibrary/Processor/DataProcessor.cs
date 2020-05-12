@@ -1,0 +1,64 @@
+﻿using CurrenciesDataAccess.Models;
+using CurrenciesDataAccess.Repositories;
+using CurrenciesDataManagerLibrary.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CurrenciesDataManagerLibrary.Processor
+{
+    public class DataProcessor : IDataProcessor
+    {
+        IExchangeRateRepository _exchangeRateRepository;
+        ICurrenciesRepository _currenciesRespository;
+        DatesRangeRepository _rangeDatesRepository;
+        public DataProcessor(IExchangeRateRepository exchangeRateRepository, ICurrenciesRepository currenciesRepository,
+            DatesRangeRepository minAndMaxDateRepository)
+        {
+            _exchangeRateRepository = exchangeRateRepository;
+            _currenciesRespository = currenciesRepository;
+            _rangeDatesRepository = minAndMaxDateRepository;
+        }
+
+        public async Task<ExchangeRateApiModel> GetRateAsync(string baseCurrency, string quoteCurrency, string date)
+        {
+
+            decimal rate = await _exchangeRateRepository.GetRateAsync(baseCurrency, quoteCurrency, date);
+            ExchangeRateApiModel apiModel = new ExchangeRateApiModel();
+            apiModel.rates.Add(baseCurrency, rate);
+            apiModel.Base = baseCurrency;
+            apiModel.Date = date;
+
+            return apiModel;
+        }
+
+        public async Task<Dictionary<string, string>> GetCurrenciesListAsync()         
+        {
+            Dictionary<string, string> CurrenciesList = new Dictionary<string, string>();
+            var result = await _currenciesRespository.GetCurrenciesListAsync();
+
+            foreach (var currency in result)
+            {
+                CurrenciesList.Add(currency.ISO_Code, currency.Name);
+            }
+
+            return CurrenciesList;
+        }
+
+        public async Task<DatesRangeApiModel> GetDatesRangeAsync()
+        {
+           
+            var result = await _rangeDatesRepository.GetDatesRangeAsync();
+            DatesRangeApiModel apiModel = new DatesRangeApiModel
+            {
+                MinDate = result.MinDate,
+                MaxDate = result.MaxDate,
+            };
+
+            return apiModel;
+        }
+
+    }
+}
