@@ -24,14 +24,14 @@ namespace WPFCuerrenciesUI.ViewModels
 		private string _selectedQuote;		
 		private IAPIHelper _apiHelper;
 		private DateTime _date;
-		private ICurrenciesList _cDictionary;
+		private ICurrenciesList _currenciesListFromFile;
 		private BindableCollection<string> _currenciesList = new BindableCollection<string>();
 
-		public ShellViewModel(ICurrenciesList CDictionary , IAPIHelper apiHelper)
+		public ShellViewModel(ICurrenciesList currenciesListFromFile , IAPIHelper apiHelper)
 		{
-			_cDictionary = CDictionary;
+			_currenciesListFromFile = currenciesListFromFile;
 			_apiHelper = apiHelper;
-			Calculate = new CalculateCommand(CallCalculator);
+			Calculate = new CalculateCommand(Calculator);
 			CallGetRateAsync = new GetRateCommand(GetRateAsync, GetRateCanExecute);			
 		}
 
@@ -79,7 +79,7 @@ namespace WPFCuerrenciesUI.ViewModels
 				else
 				{
 			    //Else it get it from a json File, since the public API https://api.exchangeratesapi.io doesnt hava such endpoint.
-					ListOfCurrencies = await _cDictionary.GetCurrenciesListAsync();
+					ListOfCurrencies = await _currenciesListFromFile.GetCurrenciesListAsync();
 				}
 
 				foreach (KeyValuePair<string, string> x in ListOfCurrencies.OrderBy(x => x.Value))
@@ -150,7 +150,7 @@ namespace WPFCuerrenciesUI.ViewModels
 						{
 							//Default is calulate from base value, although user can calculate from quote value using the
 							//QuoteValue textbox, and CallCalculator will be called with the "QuoteValue" parameter.
-							CallCalculator("BaseValue");
+							Calculator("BaseValue");
 						}
 					}
 					catch (Exception ex)
@@ -172,7 +172,7 @@ namespace WPFCuerrenciesUI.ViewModels
 	
 		}
 
-		public void CallCalculator(string hasChanged)
+		public void Calculator(string hasChanged)
 		{
 			
 			try
