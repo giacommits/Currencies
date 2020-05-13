@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using WPFCuerrenciesUI.Helpers;
 using WPFCuerrenciesUI.ViewModels;
 
 namespace WPFCuerrenciesUI
@@ -27,6 +28,9 @@ namespace WPFCuerrenciesUI
                 .Singleton<IWindowManager, WindowManager>()
                 .PerRequest<ICurrenciesList, CurrenciesList>()
                 .Singleton<IAPIHelper, APIHelper>()
+                .PerRequest<IDatesRangeHelper, DatesRangeHelper>()
+                .PerRequest<IRateHelper, RateHelper>()
+                .PerRequest<ICurrenciesListHelper, CurrenciesListHelper>()
                 .RegisterSingleton(typeof(ShellViewModel),null, typeof(ShellViewModel));                
         }
 

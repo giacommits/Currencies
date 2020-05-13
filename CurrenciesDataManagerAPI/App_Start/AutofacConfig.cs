@@ -34,7 +34,7 @@ namespace CurrenciesDataManagerAPI.App_Start
         private static IContainer RegisterServices(ContainerBuilder builder)
         {
 
-            //Register your Web API controllers.  
+            
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             builder.RegisterType<ExchangeRateRepository>()
@@ -53,11 +53,7 @@ namespace CurrenciesDataManagerAPI.App_Start
                 .As<IDataProcessor>()
                 .InstancePerLifetimeScope();
 
-            /* builder.RegisterGeneric(typeof(GenericRepository<>))
-                    .As(typeof(IGenericRepository<>))
-                    .InstancePerRequest();*/
-
-            //Set the dependency resolver to be Autofac.  
+           
             Container = builder.Build();
 
             return Container;

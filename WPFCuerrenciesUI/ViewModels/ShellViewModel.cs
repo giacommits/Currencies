@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using WPFCuerrenciesUI.ViewModels.Commands;
 using System.Configuration;
+using WPFCuerrenciesUI.Helpers;
 
 namespace WPFCuerrenciesUI.ViewModels
 {
@@ -23,109 +24,98 @@ namespace WPFCuerrenciesUI.ViewModels
 		private string _selectedBase;
 		private string _selectedQuote;		
 		private IAPIHelper _apiHelper;
-		private DateTime _date;
-		private ICurrenciesList _currenciesListFromFile;
+		private IDatesRangeHelper _datesRangeHelper;
+		private ICurrenciesListHelper _currenciesListHelper;
+		private IRateHelper _rateHelper;
+		private DateTime _date;		
 		private BindableCollection<string> _currenciesList = new BindableCollection<string>();
 
-		public ShellViewModel(ICurrenciesList currenciesListFromFile , IAPIHelper apiHelper)
-		{
-			_currenciesListFromFile = currenciesListFromFile;
+		public ShellViewModel( IAPIHelper apiHelper, IDatesRangeHelper dateRangeHelper,
+			ICurrenciesListHelper currenciesListHelper,	IRateHelper rateHelper)
+		{			
 			_apiHelper = apiHelper;
+			_datesRangeHelper = dateRangeHelper;
+			_currenciesListHelper = currenciesListHelper;
+			_rateHelper = rateHelper;
 			Calculate = new CalculateCommand(Calculator);
 			CallGetRateAsync = new GetRateCommand(GetRateAsync, GetRateCanExecute);			
 		}
 
-		//To avoid calling asyn method on constructor
+		//To avoid calling async method on constructor
 		protected async override void OnViewLoaded(object view)
 		{
 			base.OnViewLoaded(view);
+
+			//Changes in controls automatically calls the API for updating values, setting this property to false avoids it
 			CanCallGetRate = false;
-			await GetCurrenciesList();
-			if (_apiHelper.LocalApi)
-			{
-				await GetDatesRangeAsync();
-			}
-			else
-			{
-				try
-				{
-					MinDate = DateTime.Parse(ConfigurationManager.AppSettings["remoteApiMinDate"]);
-					MaxDate = DateTime.Now;
-					Date = DateTime.Now;
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(ex.Message, "Error, could not retrieve dates range.");
-				}
-			}
-			CanCallGetRate = true;
-			await GetRateAsync();			
-		}
 
-        //Gets the list of avilables currencies
-		private async Task GetCurrenciesList()
-		{
-
+			//Gets the list of avilables currencies
 			try
 			{
-				Dictionary<string, string> ListOfCurrencies = new Dictionary<string, string>();
+				CurrenciesList = await _currenciesListHelper.GetCurrenciesListAsync();
+				//Sets initial values for comboboxes
+				SetSelectedCurrencies();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error, could not retrive currencies list. Sorry, shutting down... ");
+			}
 
-				//If app.config is set to utilize local API it get the list from an endpoint in the local API.
-				if (_apiHelper.LocalApi)
-				{
-					ListOfCurrencies = await _apiHelper.GetCurrenciesListFromApiAsync();
-					
-				}
-				else
-				{
-			    //Else it get it from a json File, since the public API https://api.exchangeratesapi.io doesnt hava such endpoint.
-					ListOfCurrencies = await _currenciesListFromFile.GetCurrenciesListAsync();
-				}
+			//Gets the range of avilables dates in the database
+			try
+			{
+				DatesRangeModel model = await _datesRangeHelper.GetDatesRange();
+				StartDate = model.StartDate;
+				EndDate = model.EndDate;
+				//Initialize DatePiker in end date
+				Date = model.EndDate;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, $"Error, could not retrieve avilable dates range, " +
+					$"the application may not work correctly");
+			}
 
-				foreach (KeyValuePair<string, string> x in ListOfCurrencies.OrderBy(x => x.Value))
-				{
+			CanCallGetRate = true;
 
-					CurrenciesList.Add($"{x.Value} ({x.Key})");
-					if (x.Key == "EUR")    //Sets default selected items for comboboxes
-						SelectedBase = CurrenciesList.Last();
+			//Finally the call to the API is made
+			try
+			{
+				await GetRateAsync();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message, "Error, could not retrieve data from API");
+			}
+			
+		}
 
-					if (x.Key == "USD")
-						SelectedQuote = CurrenciesList.Last();
-				}
+       //Sets initial values for comboboxes
+		public void  SetSelectedCurrencies ()
+		{
+			try
+			{
+				//From App.Config
+				SelectedBase = CurrenciesList.FirstOrDefault
+					(x => x.Contains(ConfigurationManager.AppSettings["DefaultBase"]));
 
-				if (SelectedBase == null) //Sets default selected items for comboboxes in case the above are not in the CurrenciesList
+				SelectedQuote = CurrenciesList.FirstOrDefault
+					(x => x.Contains(ConfigurationManager.AppSettings["DefaultQuote"]));
+
+				//Or defaults
+				if (SelectedBase == null) 
 					SelectedBase = CurrenciesList[0];
 
 				if (SelectedQuote == null)
 					SelectedQuote = CurrenciesList[1];
-
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.Message, "Error, la aplicacion se cerrara.");
+				MessageBox.Show(ex.Message, "Error, could not retrieve currencies, shutting down...");
 				Application.Current.Shutdown();
 			}
 		}
-
-		//Gets the avilable dates range to pick from. This information is provided by dates/range endpoint in local API
-		public async Task GetDatesRangeAsync()
-		{
-			try
-			{
-				var model = await _apiHelper.GetDatesRangeAsync();
-				MinDate = model.MinDate;
-				MaxDate = model.MaxDate;
-				CanCallGetRate = false;
-				Date = model.MaxDate;
-				CanCallGetRate = true;
-			}
-
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error, could not retrieve dates range.");
-				
-			}
-		}
+	
 
 
 		//Gets rate from API and calls the method that will initiates calculations
@@ -133,43 +123,32 @@ namespace WPFCuerrenciesUI.ViewModels
 		{
 			if (SelectedBase == SelectedQuote)
 			{
-				BaseValue = "";
-				QuoteValue = "";
+				QuoteValue = BaseValue;
+				Rate = 1;
 			}
-			else 
+			else
 			{
-				if (SelectedBase != "" && SelectedQuote != "" && Date.ToString() != "")
+				if (Date >= StartDate && Date <= EndDate)
 				{
-					try
+					Rate = await _rateHelper.GetRateAsync(SelectedBase, SelectedQuote, Date);
+
+					if (BaseValue != "")
 					{
-						string baseCurrency = new string((SelectedBase.ToString().Substring(SelectedBase.Length - 4, 3).ToArray()));
-						string quoteCurrency = new string((SelectedQuote.Substring(SelectedQuote.Length - 4, 3).ToArray()));
-						var model = await _apiHelper.GetRateFromAPIAsync(baseCurrency, quoteCurrency, Date.ToString("yyyy-MM-dd"));
-						Rate = model.Rates.First().Value;
-						if (BaseValue != "" && Rate != 0)
-						{
-							//Default is calulate from base value, although user can calculate from quote value using the
-							//QuoteValue textbox, and CallCalculator will be called with the "QuoteValue" parameter.
-							Calculator("BaseValue");
-						}
-					}
-					catch (Exception ex)
-					{
-						CanCallGetRate = false;
-						BaseValue = "";
-						QuoteValue = "";
-						CanCallGetRate = true;
-						Date = MaxDate;
-						MessageBox.Show(ex.Message, "Error");
-						
-						return;
+						//Default is calulate from base value, although user can calculate from quote value using the
+						//QuoteValue textbox, and CallCalculator will be called with the "QuoteValue" parameter.
+						Calculator("BaseValue");
 					}
 				}
-				
+				else
+				{
+					//There is a bug when an invalid date is entered, the message error is shown twice
+					MessageBox.Show($"No registers for such date. " +
+						$"This message may show twice... it's a bug, will be fixed", "Error");
+
+					Date = EndDate;
+				}
 			}
 
-			
-	
 		}
 
 		public void Calculator(string hasChanged)
@@ -232,6 +211,7 @@ namespace WPFCuerrenciesUI.ViewModels
 
 		public GetRateCommand CallGetRateAsync { get; private set; }
 
+
 		public bool CanCallGetRate { get; set; } = true;
 		public bool GetRateCanExecute()
 		{
@@ -239,27 +219,27 @@ namespace WPFCuerrenciesUI.ViewModels
 		}
 
 
-		private DateTime _minDate;
+		private DateTime _startDate;
 
-		public DateTime MinDate
+		public DateTime StartDate
 		{	
-			get { return _minDate; }
+			get { return _startDate; }
 			set 
 			{ 
-				_minDate = value;
-				NotifyOfPropertyChange(()=> MinDate);
+				_startDate = value;
+				NotifyOfPropertyChange(()=> StartDate);
 			}
 		}
 
-		private DateTime _maxDate;
+		private DateTime _endDate;
 
-		public DateTime MaxDate
+		public DateTime EndDate
 		{
-			get { return _maxDate; }
+			get { return _endDate; }
 			set 
 			{
-				_maxDate = value;
-				NotifyOfPropertyChange(() => MaxDate);
+				_endDate = value;
+				NotifyOfPropertyChange(() => EndDate);
 			}
 		}
 
@@ -271,7 +251,11 @@ namespace WPFCuerrenciesUI.ViewModels
 
 			get { return _currenciesList; }
 
-			set { _currenciesList = value; }
+			set 
+			{ 
+				_currenciesList = value;
+				NotifyOfPropertyChange(() => CurrenciesList);
+			}
 		}
 
 		public string SelectedBase

@@ -33,7 +33,6 @@ namespace CurrenciesLibrary.CurrenciesUtilities
             using (var reader = File.OpenText("dictionary.json"))
             {
                 var fileText = await reader.ReadToEndAsync();
-                // Do something with fileText...
                 return JsonConvert.DeserializeObject<Dictionary<string, string>>(fileText);
             }
 

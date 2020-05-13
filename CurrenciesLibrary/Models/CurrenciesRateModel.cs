@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CurrenciesLibrary.Models
-{
-    public class DatesRangeApiModel
+{ 
+    public class CurrenciesRateModel  
     {
-        public DateTime MinDate { get; set; }
-        public DateTime MaxDate { get; set; }
+        public Dictionary<string, decimal> Rates { get; set; }  // for example USD: 1.3254
+        
     }
 }

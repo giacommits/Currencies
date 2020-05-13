@@ -8,7 +8,7 @@ namespace CurrenciesDataManagerLibrary.Models
 {
     public class DatesRangeApiModel
     {
-        public DateTime MinDate { get; set; }
-        public DateTime MaxDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

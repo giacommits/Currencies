@@ -60,9 +60,9 @@
     <Compile Include="CurrenciesUtilities\CurrenciesCalculator.cs" />
     <Compile Include="CurrenciesUtilities\CurrenciesList.cs" />
     <Compile Include="CurrenciesUtilities\ICurrenciesList.cs" />
-    <Compile Include="Models\DatesRangeApiModel.cs" />
+    <Compile Include="Models\DatesRangeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\CurrenciesRateAPIModel.cs" />
+    <Compile Include="Models\CurrenciesRateModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

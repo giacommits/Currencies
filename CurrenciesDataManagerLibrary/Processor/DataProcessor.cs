@@ -14,7 +14,9 @@ namespace CurrenciesDataManagerLibrary.Processor
         IExchangeRateRepository _exchangeRateRepository;
         ICurrenciesRepository _currenciesRespository;
         DatesRangeRepository _rangeDatesRepository;
-        public DataProcessor(IExchangeRateRepository exchangeRateRepository, ICurrenciesRepository currenciesRepository,
+
+        public DataProcessor(IExchangeRateRepository exchangeRateRepository,
+            ICurrenciesRepository currenciesRepository,
             DatesRangeRepository minAndMaxDateRepository)
         {
             _exchangeRateRepository = exchangeRateRepository;
@@ -53,8 +55,8 @@ namespace CurrenciesDataManagerLibrary.Processor
             var result = await _rangeDatesRepository.GetDatesRangeAsync();
             DatesRangeApiModel apiModel = new DatesRangeApiModel
             {
-                MinDate = result.MinDate,
-                MaxDate = result.MaxDate,
+                StartDate = result.StartDate,
+                EndDate = result.EndDate,
             };
 
             return apiModel;

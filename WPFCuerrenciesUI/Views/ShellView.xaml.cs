@@ -72,6 +72,6 @@ namespace WPFCuerrenciesUI.Views
                 e.Handled = true;
         }
 
-       
+      
     }
 }

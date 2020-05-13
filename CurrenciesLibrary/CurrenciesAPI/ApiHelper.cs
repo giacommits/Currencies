@@ -20,17 +20,18 @@ namespace CurrenciesLibrary.CurrenciesAPI
             InitializeClient();
         }
 
-        public bool LocalApi { get; set; }
+        public bool InternalApi { get; set; }
         private void InitializeClient()
         {
-            string api = ConfigurationManager.AppSettings["localApi"];
+            //Checks to see wich API will use
+            string api = ConfigurationManager.AppSettings["InternalApi"];
             if (api == "")
             {
-                api = ConfigurationManager.AppSettings["remoteApi"];
+                api = ConfigurationManager.AppSettings["PublicApi"];
             }
             else
             {
-                LocalApi = true;
+                InternalApi = true;
             }
 
             ApiClient = new HttpClient();
@@ -41,7 +42,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
         }
 
         //Calls the API and gets the data in the Model.
-        public async Task<CurrenciesRateAPIModel> GetRateFromAPIAsync(string baseCurrency, string quoteCurrency, string date)
+        public async Task<CurrenciesRateModel> GetRateFromAPIAsync(string baseCurrency, string quoteCurrency, string date)
         {
 
             string url = EndpointUrl.GenerateString(baseCurrency, quoteCurrency, date);
@@ -52,7 +53,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    CurrenciesRateAPIModel rate = await response.Content.ReadAsAsync<CurrenciesRateAPIModel>();
+                    CurrenciesRateModel rate = await response.Content.ReadAsAsync<CurrenciesRateModel>();
                     return rate;
                 }
                 else
@@ -82,7 +83,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
             }
         }
 
-        public async Task<DatesRangeApiModel> GetDatesRangeAsync()
+        public async Task<DatesRangeModel> GetDatesRangeAsync()
         {
             using (HttpResponseMessage response = await ApiClient.GetAsync("dates/range"))
             {
@@ -90,7 +91,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
                 if (response.IsSuccessStatusCode)
                 {
                     var temp = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<DatesRangeApiModel>(temp);
+                    return JsonConvert.DeserializeObject<DatesRangeModel>(temp);
 
                 }
                 else

@@ -73,6 +73,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstraper.cs" />
+    <Compile Include="Helpers\CurrenciesListHelper.cs" />
+    <Compile Include="Helpers\DatesRangeHelper.cs" />
+    <Compile Include="Helpers\ICurrenciesListHelper.cs" />
+    <Compile Include="Helpers\IDatesRangeHelper.cs" />
+    <Compile Include="Helpers\IRateHelper.cs" />
+    <Compile Include="Helpers\RateHelper.cs" />
     <Compile Include="ViewModels\Commands\CalculateCommand.cs" />
     <Compile Include="ViewModels\Commands\GetRateCommand.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
