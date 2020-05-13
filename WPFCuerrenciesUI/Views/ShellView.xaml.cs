@@ -72,6 +72,25 @@ namespace WPFCuerrenciesUI.Views
                 e.Handled = true;
         }
 
-      
+        //Validation for input in DatePicker
+        private void Date_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.Key == Key.Enter || e.Key == Key.Tab || e.Key == Key.Return)
+                {
+                    if (DateTime.Parse(Date.Text) > Date.DisplayDateEnd || DateTime.Parse(Date.Text) < Date.DisplayDateStart)
+                    {
+                        MessageBox.Show("No registers for such date", "Error");
+                        Date.Text = Date.SelectedDate.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Invalid date", "Error");
+                Date.Text = Date.SelectedDate.ToString();
+            }
+        }
     }
 }

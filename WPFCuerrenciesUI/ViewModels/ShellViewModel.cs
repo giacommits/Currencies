@@ -116,28 +116,16 @@ namespace WPFCuerrenciesUI.ViewModels
 				Rate = 1;
 			}
 			else
-			{
-				if (Date >= StartDate && Date <= EndDate)
-				{
-					Rate = await _rateHelper.GetRateAsync(SelectedBase, SelectedQuote, Date);
+			{		
+				Rate = await _rateHelper.GetRateAsync(SelectedBase, SelectedQuote, Date);
 
-					if (BaseValue != "")
-					{
-						//Default is calulate from base value, although user can calculate from quote value using the
-						//QuoteValue textbox, and CallCalculator will be called with the "QuoteValue" parameter.
-						Calculator("BaseValue");
-					}
-				}
-				else
+				if (BaseValue != "")
 				{
-					//There is a bug when an invalid date is entered, for some reason the message error is shown twice
-					MessageBox.Show($"No registers for such date. " +
-						$"This message may show twice... it's a bug, will be fixed", "Error");
-
-					Date = EndDate;
-				}
+					//Default is calulate from base value, although user can calculate from quote value using the
+					//QuoteValue textbox, and CallCalculator will be called with the "QuoteValue" parameter.
+					Calculator("BaseValue");
+				}				
 			}
-
 		}
 
 		public void Calculator(string hasChanged)
