@@ -1,13 +1,9 @@
 ﻿using Caliburn.Micro;
-using CurrenciesLibrary.CurrenciesAPI;
 using CurrenciesLibrary.Models;
 using CurrenciesLibrary.CurrenciesUtilities;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using WPFCuerrenciesUI.ViewModels.Commands;
@@ -91,28 +87,22 @@ namespace WPFCuerrenciesUI.ViewModels
 
        //Sets initial values for comboboxes
 		public void  SetSelectedCurrencies ()
-		{
-			try
-			{
-				//From App.Config
-				SelectedBase = CurrenciesList.FirstOrDefault
+		{			
+			
+			//From App.Config
+			SelectedBase = CurrenciesList.FirstOrDefault
 					(x => x.Contains(ConfigurationManager.AppSettings["DefaultBase"]));
 
-				SelectedQuote = CurrenciesList.FirstOrDefault
+			SelectedQuote = CurrenciesList.FirstOrDefault
 					(x => x.Contains(ConfigurationManager.AppSettings["DefaultQuote"]));
 
-				//Or defaults
-				if (SelectedBase == null) 
-					SelectedBase = CurrenciesList[0];
+			//Or defaults
+			if (SelectedBase == null) 
+				SelectedBase = CurrenciesList[0];
 
-				if (SelectedQuote == null)
-					SelectedQuote = CurrenciesList[1];
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error, could not retrieve currencies, shutting down...");
-				Application.Current.Shutdown();
-			}
+			if (SelectedQuote == null)
+				SelectedQuote = CurrenciesList[1];			
+			
 		}
 	
 
@@ -140,7 +130,7 @@ namespace WPFCuerrenciesUI.ViewModels
 				}
 				else
 				{
-					//There is a bug when an invalid date is entered, the message error is shown twice
+					//There is a bug when an invalid date is entered, for some reason the message error is shown twice
 					MessageBox.Show($"No registers for such date. " +
 						$"This message may show twice... it's a bug, will be fixed", "Error");
 
@@ -156,7 +146,7 @@ namespace WPFCuerrenciesUI.ViewModels
 			try
 			{
 				//Sees if user wants to calculate from base value or quote value.
-				//Checks if the values in the textboxes are correct for calling the calculator method.		
+				//Checks if the values in the textboxes are correct for calling the calculate method.		
 				if ("BaseValue" == hasChanged && BaseValue != "." && BaseValue != "")
 				{	
 					
