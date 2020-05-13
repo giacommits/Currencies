@@ -23,17 +23,15 @@ namespace WPFCuerrenciesUI.ViewModels
 		private string _quoteValue;
 		private string _selectedBase;
 		private string _selectedQuote;		
-		private IAPIHelper _apiHelper;
 		private IDatesRangeHelper _datesRangeHelper;
 		private ICurrenciesListHelper _currenciesListHelper;
 		private IRateHelper _rateHelper;
 		private DateTime _date;		
 		private BindableCollection<string> _currenciesList = new BindableCollection<string>();
 
-		public ShellViewModel( IAPIHelper apiHelper, IDatesRangeHelper dateRangeHelper,
+		public ShellViewModel( IDatesRangeHelper dateRangeHelper,
 			ICurrenciesListHelper currenciesListHelper,	IRateHelper rateHelper)
 		{			
-			_apiHelper = apiHelper;
 			_datesRangeHelper = dateRangeHelper;
 			_currenciesListHelper = currenciesListHelper;
 			_rateHelper = rateHelper;
@@ -59,6 +57,7 @@ namespace WPFCuerrenciesUI.ViewModels
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message, "Error, could not retrive currencies list. Sorry, shutting down... ");
+				Application.Current.Shutdown();
 			}
 
 			//Gets the range of avilables dates in the database
@@ -157,9 +156,7 @@ namespace WPFCuerrenciesUI.ViewModels
 			try
 			{
 				//Sees if user wants to calculate from base value or quote value.
-				//Checks if the values in the textboxes are correct for calling the calculator method.
-				//If not, it clears them.
-
+				//Checks if the values in the textboxes are correct for calling the calculator method.		
 				if ("BaseValue" == hasChanged && BaseValue != "." && BaseValue != "")
 				{	
 					
@@ -175,7 +172,7 @@ namespace WPFCuerrenciesUI.ViewModels
 							  ToString(CultureInfo.GetCultureInfo("en-US"));
 					
 				}
-
+				//If not, it clears them.
 				else
 				{
 					BaseValue = "";
