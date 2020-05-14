@@ -14,51 +14,44 @@ namespace CurrenciesDataManagerAPI.App_Start
 {
     public class AutofacConfig
     {
-
         public static IContainer Container;
 
         public static void Initialize(HttpConfiguration config)
         {
-
-            Initialize(config, RegisterServices(new ContainerBuilder()));
-            
+            Initialize(config, RegisterServices(new ContainerBuilder()));            
         }
-
 
         public static void Initialize(HttpConfiguration config, IContainer container)
         {
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
-
         }
 
         private static IContainer RegisterServices(ContainerBuilder builder)
         {
 
-            
+            builder.RegisterType<CurrenciesDb>()
+               .AsSelf().InstancePerLifetimeScope();
+
+            builder.RegisterType<DataProcessor>()
+               .As<IDataProcessor>()
+               .InstancePerLifetimeScope();
+
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            builder.RegisterType<DatesRangeRepository>()
+               .As<DatesRangeRepository>()
+               .InstancePerLifetimeScope();
+
+            builder.RegisterType<CurrenciesRepository>()
+               .As<ICurrenciesRepository>()
+               .InstancePerLifetimeScope();
 
             builder.RegisterType<ExchangeRateRepository>()
                   .As<IExchangeRateRepository>()
-                  .InstancePerLifetimeScope();
-            builder.RegisterType<CurrenciesRepository>()
-                .As<ICurrenciesRepository>()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<DatesRangeRepository>()
-                .As<DatesRangeRepository>()
-                .InstancePerLifetimeScope();
+                  .InstancePerLifetimeScope();         
 
-            builder.RegisterType<CurrenciesDb>()
-                .AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<DataProcessor>()
-                .As<IDataProcessor>()
-                .InstancePerLifetimeScope();
-
-           
             Container = builder.Build();
-
             return Container;
         }
-
-
     }
 }

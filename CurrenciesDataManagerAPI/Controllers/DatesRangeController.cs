@@ -31,8 +31,6 @@ namespace CurrenciesDataManagerAPI.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-        }
-
-       
+        }       
     }
 }

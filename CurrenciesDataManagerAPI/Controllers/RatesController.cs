@@ -24,13 +24,11 @@ namespace CurrenciesDataManagerAPI.Controllers
         public RatesController(IDataProcessor dataProcessor)
         {
             _dataProcessor = dataProcessor;
-
         }
 
         [Route("{date}")]
         public async Task<ExchangeRateApiModel> Get(string date)
         {
-
             try
             {
                 var allUrlKeyValues = ControllerContext.Request.GetQueryNameValuePairs();

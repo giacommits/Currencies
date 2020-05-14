@@ -12,12 +12,9 @@ namespace CurrenciesDataManagerAPI.Controllers
     public class CurrenciesListController : ApiController
     {
         private readonly IDataProcessor _dataProcessor;
-
-
         public CurrenciesListController(IDataProcessor dataProcessor)
         {
             _dataProcessor = dataProcessor;
-
         }
 
         [Route("currencies/list")]
@@ -32,7 +29,6 @@ namespace CurrenciesDataManagerAPI.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-        }
-       
+        }       
     }
 }

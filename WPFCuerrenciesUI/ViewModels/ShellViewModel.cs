@@ -18,11 +18,13 @@ namespace WPFCuerrenciesUI.ViewModels
 		private string _baseValue ="1";
 		private string _quoteValue;
 		private string _selectedBase;
-		private string _selectedQuote;		
-		private IDatesRangeHelper _datesRangeHelper;
+		private string _selectedQuote;
 		private ICurrenciesListHelper _currenciesListHelper;
 		private IRateHelper _rateHelper;
-		private DateTime _date;		
+		private DateTime _date;
+		private IDatesRangeHelper _datesRangeHelper;
+		private DateTime _startDate;
+		private DateTime _endDate;
 		private BindableCollection<string> _currenciesList = new BindableCollection<string>();
 
 		public ShellViewModel( IDatesRangeHelper dateRangeHelper,
@@ -181,6 +183,7 @@ namespace WPFCuerrenciesUI.ViewModels
 
 		}
 
+		public decimal Rate { get; set; }
 
 		public CalculateCommand Calculate { get; private set; }
 
@@ -192,9 +195,7 @@ namespace WPFCuerrenciesUI.ViewModels
 		{
 			return CanCallGetRate;
 		}
-
-
-		private DateTime _startDate;
+		
 
 		public DateTime StartDate
 		{	
@@ -205,8 +206,7 @@ namespace WPFCuerrenciesUI.ViewModels
 				NotifyOfPropertyChange(()=> StartDate);
 			}
 		}
-
-		private DateTime _endDate;
+		
 
 		public DateTime EndDate
 		{
@@ -217,13 +217,10 @@ namespace WPFCuerrenciesUI.ViewModels
 				NotifyOfPropertyChange(() => EndDate);
 			}
 		}
-
-
-		public decimal Rate { get; set; }
+		
 
 		public BindableCollection<string> CurrenciesList
 		{
-
 			get { return _currenciesList; }
 
 			set 
@@ -235,7 +232,6 @@ namespace WPFCuerrenciesUI.ViewModels
 
 		public string SelectedBase
 		{
-
 			get { return _selectedBase; }
 			set 
 			{ 
@@ -243,12 +239,10 @@ namespace WPFCuerrenciesUI.ViewModels
 
 				NotifyOfPropertyChange(() => SelectedBase);	
 			}
-
 		}	
 
 		public string SelectedQuote
 		{
-
 			get { return _selectedQuote; }
 			set 
 			{ 
@@ -256,12 +250,10 @@ namespace WPFCuerrenciesUI.ViewModels
 
 				NotifyOfPropertyChange(() => SelectedQuote);
 			}
-
 		}
 
 		public string BaseValue
 		{
-
 			get { return _baseValue; }
 			set 
 			{
@@ -269,12 +261,10 @@ namespace WPFCuerrenciesUI.ViewModels
 
 				NotifyOfPropertyChange(() => BaseValue);
 			}
-
 		}
 
 		public string QuoteValue
 		{
-
 			get { return _quoteValue; }
 			set	
 			{
@@ -282,12 +272,10 @@ namespace WPFCuerrenciesUI.ViewModels
 
 				NotifyOfPropertyChange(() => QuoteValue);		
 			}
-
 		}
 		
 		public DateTime Date
 		{
-
 			get { return _date; }
 			set 
 			{ 
@@ -295,7 +283,6 @@ namespace WPFCuerrenciesUI.ViewModels
 
 				NotifyOfPropertyChange(() => Date);
 			}
-
 		}
 
 	}
