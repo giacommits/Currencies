@@ -121,9 +121,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\CurrenciesLibrary\CurrenciesLibrary.csproj">
       <Project>{0c93b847-7126-4b75-afd9-b584fdf1c723}</Project>

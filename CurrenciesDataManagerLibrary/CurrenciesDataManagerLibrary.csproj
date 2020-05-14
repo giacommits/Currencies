@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\CurrenciesListApiModel.cs" />
-    <Compile Include="Models\ExchangeRateApiModel.cs" />
+    <Compile Include="Models\CurrenciesRateApiModel.cs" />
     <Compile Include="Models\DatesRangeApiModel.cs" />
     <Compile Include="Processor\DataProcessor.cs" />
     <Compile Include="Processor\IDataProcessor.cs" />

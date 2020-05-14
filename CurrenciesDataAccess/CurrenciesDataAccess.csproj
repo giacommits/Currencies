@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\CurrenciesExchangeRate.cs">
+    <Compile Include="Models\CurrenciesRate.cs">
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Currency.cs">
@@ -79,10 +79,10 @@
       <DependentUpon>Models.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\ExchangeRateRepository.cs" />
+    <Compile Include="Repositories\CurrenciesRateRepository.cs" />
     <Compile Include="Repositories\CurrenciesRepository.cs" />
     <Compile Include="Repositories\ICurrenciesRepository.cs" />
-    <Compile Include="Repositories\IExchangeRateRepository.cs" />
+    <Compile Include="Repositories\ICurrenciesRateRepository.cs" />
     <Compile Include="Repositories\IDatesRangeRepository.cs" />
     <Compile Include="Repositories\DatesRangeRepository.cs" />
   </ItemGroup>

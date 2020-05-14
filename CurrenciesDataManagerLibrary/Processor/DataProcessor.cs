@@ -11,11 +11,11 @@ namespace CurrenciesDataManagerLibrary.Processor
 {
     public class DataProcessor : IDataProcessor
     {
-        IExchangeRateRepository _exchangeRateRepository;
+        ICurrenciesRateRepository _exchangeRateRepository;
         ICurrenciesRepository _currenciesRespository;
         DatesRangeRepository _rangeDatesRepository;
 
-        public DataProcessor(IExchangeRateRepository exchangeRateRepository,
+        public DataProcessor(ICurrenciesRateRepository exchangeRateRepository,
             ICurrenciesRepository currenciesRepository,
             DatesRangeRepository minAndMaxDateRepository)
         {
@@ -24,11 +24,11 @@ namespace CurrenciesDataManagerLibrary.Processor
             _rangeDatesRepository = minAndMaxDateRepository;
         }
 
-        public async Task<ExchangeRateApiModel> GetRateAsync(string baseCurrency, string quoteCurrency, string date)
+        public async Task<CurrenciesRateApiModel> GetRateAsync(string baseCurrency, string quoteCurrency, string date)
         {
 
             decimal rate = await _exchangeRateRepository.GetRateAsync(baseCurrency, quoteCurrency, date);
-            ExchangeRateApiModel apiModel = new ExchangeRateApiModel();
+            CurrenciesRateApiModel apiModel = new CurrenciesRateApiModel();
             apiModel.rates.Add(baseCurrency, rate);
             apiModel.Base = baseCurrency;
             apiModel.Date = date;

@@ -74,7 +74,7 @@
           <NavigationProperty Name="CurrenciesExchangeRates" Relationship="Self.FK__Currencie__BaseC__276EDEB3" FromRole="Currencies" ToRole="CurrenciesExchangeRate" />
           <NavigationProperty Name="CurrenciesExchangeRates1" Relationship="Self.FK__Currencie__Quote__286302EC" FromRole="Currencies" ToRole="CurrenciesExchangeRate" />
         </EntityType>
-        <EntityType Name="CurrenciesExchangeRate">
+        <EntityType Name="CurrenciesRate">
           <Key>
             <PropertyRef Name="CurrenciesExchangeRateId" />
           </Key>
@@ -86,22 +86,22 @@
         </EntityType>
         <Association Name="FK__Currencie__BaseC__276EDEB3">
           <End Role="Currencies" Type="Self.Currency" Multiplicity="1" />
-          <End Role="CurrenciesExchangeRate" Type="Self.CurrenciesExchangeRate" Multiplicity="*" />
+          <End Role="CurrenciesExchangeRate" Type="CurrenciesDbContext.CurrenciesRate" Multiplicity="*" />
         </Association>
         <Association Name="FK__Currencie__Quote__286302EC">
           <End Role="Currencies" Type="Self.Currency" Multiplicity="1" />
-          <End Role="CurrenciesExchangeRate" Type="Self.CurrenciesExchangeRate" Multiplicity="*" />
+          <End Role="CurrenciesExchangeRate" Type="CurrenciesDbContext.CurrenciesRate" Multiplicity="*" />
         </Association>
         <EntityContainer Name="CurrenciesDb" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Currencies" EntityType="Self.Currency" />
-          <EntitySet Name="CurrenciesExchangeRates" EntityType="Self.CurrenciesExchangeRate" />
+          <EntitySet Name="CurrenciesRates" EntityType="CurrenciesDbContext.CurrenciesRate" />
           <AssociationSet Name="FK__Currencie__BaseC__276EDEB3" Association="Self.FK__Currencie__BaseC__276EDEB3">
             <End Role="Currencies" EntitySet="Currencies" />
-            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesExchangeRates" />
+            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesRates" />
           </AssociationSet>
           <AssociationSet Name="FK__Currencie__Quote__286302EC" Association="Self.FK__Currencie__Quote__286302EC">
             <End Role="Currencies" EntitySet="Currencies" />
-            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesExchangeRates" />
+            <End Role="CurrenciesExchangeRate" EntitySet="CurrenciesRates" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -119,8 +119,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CurrenciesExchangeRates">
-            <EntityTypeMapping TypeName="CurrenciesDbContext.CurrenciesExchangeRate">
+          <EntitySetMapping Name="CurrenciesRates">
+            <EntityTypeMapping TypeName="CurrenciesDbContext.CurrenciesRate">
               <MappingFragment StoreEntitySet="CurrenciesExchangeRate">
                 <ScalarProperty Name="CurrenciesExchangeRateId" ColumnName="CurrenciesExchangeRateId" />
                 <ScalarProperty Name="RateDate" ColumnName="RateDate" />

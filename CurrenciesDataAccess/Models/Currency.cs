@@ -17,8 +17,8 @@ namespace CurrenciesDataAccess.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Currency()
         {
-            this.CurrenciesExchangeRates = new HashSet<CurrenciesExchangeRate>();
-            this.CurrenciesExchangeRates1 = new HashSet<CurrenciesExchangeRate>();
+            this.CurrenciesExchangeRates = new HashSet<CurrenciesRate>();
+            this.CurrenciesExchangeRates1 = new HashSet<CurrenciesRate>();
         }
     
         public int CurrencyId { get; set; }
@@ -26,8 +26,8 @@ namespace CurrenciesDataAccess.Models
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurrenciesExchangeRate> CurrenciesExchangeRates { get; set; }
+        public virtual ICollection<CurrenciesRate> CurrenciesExchangeRates { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CurrenciesExchangeRate> CurrenciesExchangeRates1 { get; set; }
+        public virtual ICollection<CurrenciesRate> CurrenciesExchangeRates1 { get; set; }
     }
 }

@@ -26,6 +26,6 @@ namespace CurrenciesDataAccess.Models
         }
     
         public virtual DbSet<Currency> Currencies { get; set; }
-        public virtual DbSet<CurrenciesExchangeRate> CurrenciesExchangeRates { get; set; }
+        public virtual DbSet<CurrenciesRate> CurrenciesRates { get; set; }
     }
 }

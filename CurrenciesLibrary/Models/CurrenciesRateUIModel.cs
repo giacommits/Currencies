@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CurrenciesLibrary.Models
 { 
-    public class CurrenciesRateModel  
+    public class CurrenciesRateUIModel  
     {
         public Dictionary<string, decimal> Rates { get; set; }  // for example USD: 1.3254
         

@@ -5,6 +5,6 @@ namespace WPFCuerrenciesUI.Helpers
 {
     public interface IDatesRangeHelper
     {
-        Task<DatesRangeModel> GetDatesRange();
+        Task<DatesRangeUIModel> GetDatesRange();
     }
 }

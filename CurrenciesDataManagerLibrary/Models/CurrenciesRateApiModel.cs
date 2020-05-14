@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace CurrenciesDataManagerLibrary.Models
 {
 
-    public class ExchangeRateApiModel
+    public class CurrenciesRateApiModel
     {
-        public ExchangeRateApiModel()
+        public CurrenciesRateApiModel()
         {
             rates = new Dictionary<string, decimal>();
         }

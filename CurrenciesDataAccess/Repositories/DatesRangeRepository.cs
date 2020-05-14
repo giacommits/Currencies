@@ -23,8 +23,8 @@ namespace CurrenciesDataAccess.Repositories
 
         public async Task<DatesRange> GetDatesRangeAsync()
         {
-            DateTime StartDate = await _context.CurrenciesExchangeRates.MinAsync(x => x.RateDate);
-            DateTime EndDate = await _context.CurrenciesExchangeRates.MaxAsync(x => x.RateDate);
+            DateTime StartDate = await _context.CurrenciesRates.MinAsync(x => x.RateDate);
+            DateTime EndDate = await _context.CurrenciesRates.MaxAsync(x => x.RateDate);
             DatesRange Dates = new DatesRange
             {
                 StartDate = StartDate,

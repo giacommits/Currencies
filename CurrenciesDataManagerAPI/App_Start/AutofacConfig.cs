@@ -46,8 +46,8 @@ namespace CurrenciesDataManagerAPI.App_Start
                .As<ICurrenciesRepository>()
                .InstancePerLifetimeScope();
 
-            builder.RegisterType<ExchangeRateRepository>()
-                  .As<IExchangeRateRepository>()
+            builder.RegisterType<CurrenciesRateRepository>()
+                  .As<ICurrenciesRateRepository>()
                   .InstancePerLifetimeScope();         
 
             Container = builder.Build();

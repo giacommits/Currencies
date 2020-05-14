@@ -19,7 +19,7 @@ namespace WPFCuerrenciesUI.Helpers
 		}
 
 
-		public async Task<DatesRangeModel> GetDatesRange()
+		public async Task<DatesRangeUIModel> GetDatesRange()
 		{
 			if (_apiHelper.InternalApi)
 			{
@@ -27,7 +27,7 @@ namespace WPFCuerrenciesUI.Helpers
 			}
 			else
 			{
-				DatesRangeModel model = new DatesRangeModel
+				DatesRangeUIModel model = new DatesRangeUIModel
 				{
 					StartDate = DateTime.Parse(ConfigurationManager.AppSettings["PublicApiStartDate"]),
 					EndDate = DateTime.Now,

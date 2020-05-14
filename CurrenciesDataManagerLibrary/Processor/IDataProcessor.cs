@@ -6,7 +6,7 @@ namespace CurrenciesDataManagerLibrary.Processor
 {
     public interface IDataProcessor
     {
-        Task<ExchangeRateApiModel> GetRateAsync(string baseCurrency, string quoteCurrency, string date);
+        Task<CurrenciesRateApiModel> GetRateAsync(string baseCurrency, string quoteCurrency, string date);
         Task<Dictionary<string, string>> GetCurrenciesListAsync();
         Task<DatesRangeApiModel> GetDatesRangeAsync();
     }

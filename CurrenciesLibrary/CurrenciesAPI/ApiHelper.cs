@@ -42,7 +42,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
         }
 
         //Calls the API and gets the data in the Model.
-        public async Task<CurrenciesRateModel> GetRateFromAPIAsync(string baseCurrency, string quoteCurrency, string date)
+        public async Task<CurrenciesRateUIModel> GetRateFromAPIAsync(string baseCurrency, string quoteCurrency, string date)
         {
 
             string url = EndpointUrl.GenerateString(baseCurrency, quoteCurrency, date);
@@ -53,7 +53,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
 
                 if (response.IsSuccessStatusCode)
                 {
-                    CurrenciesRateModel rate = await response.Content.ReadAsAsync<CurrenciesRateModel>();
+                    CurrenciesRateUIModel rate = await response.Content.ReadAsAsync<CurrenciesRateUIModel>();
                     return rate;
                 }
                 else
@@ -83,7 +83,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
             }
         }
 
-        public async Task<DatesRangeModel> GetDatesRangeAsync()
+        public async Task<DatesRangeUIModel> GetDatesRangeAsync()
         {
             using (HttpResponseMessage response = await ApiClient.GetAsync("dates/range"))
             {
@@ -91,7 +91,7 @@ namespace CurrenciesLibrary.CurrenciesAPI
                 if (response.IsSuccessStatusCode)
                 {
                     var temp = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<DatesRangeModel>(temp);
+                    return JsonConvert.DeserializeObject<DatesRangeUIModel>(temp);
 
                 }
                 else

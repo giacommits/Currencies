@@ -27,7 +27,7 @@ namespace CurrenciesDataManagerAPI.Controllers
         }
 
         [Route("{date}")]
-        public async Task<ExchangeRateApiModel> Get(string date)
+        public async Task<CurrenciesRateApiModel> Get(string date)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace CurrenciesDataManagerAPI.Controllers
                 string baseCurrency = allUrlKeyValues.LastOrDefault(x => x.Key == "base").Value;
                 string quoteCurrency = allUrlKeyValues.LastOrDefault(x => x.Key == "symbols").Value;
 
-                ExchangeRateApiModel model = await _dataProcessor.GetRateAsync(baseCurrency, quoteCurrency, date);
+                CurrenciesRateApiModel model = await _dataProcessor.GetRateAsync(baseCurrency, quoteCurrency, date);
                 return model;
             }
             catch 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CurrenciesLibrary.Models
 {
-    public class DatesRangeModel
+    public class DatesRangeUIModel
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

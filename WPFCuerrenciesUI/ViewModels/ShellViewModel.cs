@@ -61,7 +61,7 @@ namespace WPFCuerrenciesUI.ViewModels
 			//Gets the range of avilables dates in the database
 			try
 			{
-				DatesRangeModel model = await _datesRangeHelper.GetDatesRange();
+				DatesRangeUIModel model = await _datesRangeHelper.GetDatesRange();
 				StartDate = model.StartDate;
 				EndDate = model.EndDate;
 				//Initialize DatePiker in end date

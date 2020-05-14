@@ -10,8 +10,8 @@ namespace CurrenciesLibrary.CurrenciesAPI
         HttpClient ApiClient { get; set; }
         bool InternalApi { get; set; }
 
-        Task<CurrenciesRateModel> GetRateFromAPIAsync(string baseCurrency, string quoteCurrency, string date);
+        Task<CurrenciesRateUIModel> GetRateFromAPIAsync(string baseCurrency, string quoteCurrency, string date);
         Task<Dictionary<string, string>> GetCurrenciesListFromApiAsync();
-        Task<DatesRangeModel> GetDatesRangeAsync();
+        Task<DatesRangeUIModel> GetDatesRangeAsync();
     }
 }

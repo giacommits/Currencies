@@ -12,7 +12,7 @@ namespace CurrenciesDataAccess.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CurrenciesExchangeRate
+    public partial class CurrenciesRate
     {
         public int CurrenciesExchangeRateId { get; set; }
         public System.DateTime RateDate { get; set; }
