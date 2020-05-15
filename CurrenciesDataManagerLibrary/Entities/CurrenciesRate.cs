@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CurrenciesDataAccess.Models
+namespace CurrenciesDataManagerLibrary.Entities
 {
     using System;
     using System.Collections.Generic;

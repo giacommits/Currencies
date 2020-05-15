@@ -1,5 +1,4 @@
-﻿using CurrenciesDataAccess.Models;
-using CurrenciesDataAccess.Repositories;
+﻿using CurrenciesDataManagerLibrary.Repositories;
 using CurrenciesDataManagerLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -11,23 +10,23 @@ namespace CurrenciesDataManagerLibrary.Processor
 {
     public class DataProcessor : IDataProcessor
     {
-        ICurrenciesRateRepository _exchangeRateRepository;
-        ICurrenciesRepository _currenciesRespository;
-        DatesRangeRepository _rangeDatesRepository;
+        ICurrenciesRateRepository _currenciesRateRepository;
+        ICurrenciesListRepository _currenciesListRespository;
+        IDatesRangeRepository _datesRangeRepository;
 
-        public DataProcessor(ICurrenciesRateRepository exchangeRateRepository,
-            ICurrenciesRepository currenciesRepository,
-            DatesRangeRepository minAndMaxDateRepository)
+        public DataProcessor(ICurrenciesRateRepository currenciesRateRepository,
+            ICurrenciesListRepository currenciesListRepository,
+            IDatesRangeRepository datesRangeRepository)
         {
-            _exchangeRateRepository = exchangeRateRepository;
-            _currenciesRespository = currenciesRepository;
-            _rangeDatesRepository = minAndMaxDateRepository;
+            _currenciesRateRepository = currenciesRateRepository;
+            _currenciesListRespository = currenciesListRepository;
+            _datesRangeRepository = datesRangeRepository;
         }
 
         public async Task<CurrenciesRateApiModel> GetRateAsync(string baseCurrency, string quoteCurrency, string date)
         {
 
-            decimal rate = await _exchangeRateRepository.GetRateAsync(baseCurrency, quoteCurrency, date);
+            decimal rate = await _currenciesRateRepository.GetRateAsync(baseCurrency, quoteCurrency, date);
             CurrenciesRateApiModel apiModel = new CurrenciesRateApiModel();
             apiModel.rates.Add(baseCurrency, rate);
             apiModel.Base = baseCurrency;
@@ -39,7 +38,7 @@ namespace CurrenciesDataManagerLibrary.Processor
         public async Task<Dictionary<string, string>> GetCurrenciesListAsync()         
         {
             Dictionary<string, string> CurrenciesList = new Dictionary<string, string>();
-            var result = await _currenciesRespository.GetCurrenciesListAsync();
+            var result = await _currenciesListRespository.GetCurrenciesListAsync();
 
             foreach (var currency in result)
             {
@@ -52,7 +51,7 @@ namespace CurrenciesDataManagerLibrary.Processor
         public async Task<DatesRangeApiModel> GetDatesRangeAsync()
         {
            
-            var result = await _rangeDatesRepository.GetDatesRangeAsync();
+            var result = await _datesRangeRepository.GetDatesRangeAsync();
             DatesRangeApiModel apiModel = new DatesRangeApiModel
             {
                 StartDate = result.StartDate,

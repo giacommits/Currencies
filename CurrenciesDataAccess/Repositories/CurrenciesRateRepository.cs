@@ -1,4 +1,5 @@
-﻿using CurrenciesDataAccess.Models;
+﻿using CurrenciesDataManagerLibrary.Entities;
+using CurrenciesDataManagerLibrary.Repositories;
 using System;
 using System.Data.Entity;
 using System.Threading.Tasks;

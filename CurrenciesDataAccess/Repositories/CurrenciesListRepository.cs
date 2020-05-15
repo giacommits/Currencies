@@ -1,4 +1,5 @@
-﻿using CurrenciesDataAccess.Models;
+﻿using CurrenciesDataManagerLibrary.Entities;
+using CurrenciesDataManagerLibrary.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace CurrenciesDataAccess.Repositories
 {
-    public class CurrenciesRepository : ICurrenciesRepository
+    public class CurrenciesListRepository : ICurrenciesListRepository
     {
         private readonly CurrenciesDb _context;
 
-        public CurrenciesRepository(CurrenciesDb context)
+        public CurrenciesListRepository(CurrenciesDb context)
         {
             _context = context;
         }

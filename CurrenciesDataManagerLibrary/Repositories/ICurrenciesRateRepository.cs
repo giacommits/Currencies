@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace CurrenciesDataAccess.Repositories
+namespace CurrenciesDataManagerLibrary.Repositories
 {
     public interface ICurrenciesRateRepository : IDisposable
     {

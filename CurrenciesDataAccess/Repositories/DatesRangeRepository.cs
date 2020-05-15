@@ -1,4 +1,6 @@
-﻿using CurrenciesDataAccess.Models;
+﻿using CurrenciesDataManagerLibrary.Entities;
+using CurrenciesDataManagerLibrary.Models;
+using CurrenciesDataManagerLibrary.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -21,11 +23,11 @@ namespace CurrenciesDataAccess.Repositories
             _context.Dispose();
         }
 
-        public async Task<DatesRange> GetDatesRangeAsync()
+        public async Task<DatesRangeApiModel> GetDatesRangeAsync()
         {
             DateTime StartDate = await _context.CurrenciesRates.MinAsync(x => x.RateDate);
             DateTime EndDate = await _context.CurrenciesRates.MaxAsync(x => x.RateDate);
-            DatesRange Dates = new DatesRange
+            DatesRangeApiModel Dates = new DatesRangeApiModel
             {
                 StartDate = StartDate,
                 EndDate = EndDate,

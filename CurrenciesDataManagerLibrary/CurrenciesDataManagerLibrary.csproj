@@ -41,19 +41,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\CurrenciesRate.cs">
+      <DependentUpon>Models.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Currency.cs">
+      <DependentUpon>Models.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Models.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Models.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\CurrenciesListApiModel.cs" />
     <Compile Include="Models\CurrenciesRateApiModel.cs" />
     <Compile Include="Models\DatesRangeApiModel.cs" />
     <Compile Include="Processor\DataProcessor.cs" />
     <Compile Include="Processor\IDataProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\ICurrenciesRateRepository.cs" />
+    <Compile Include="Repositories\ICurrenciesListRepository.cs" />
+    <Compile Include="Repositories\IDatesRangeRepository.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\CurrenciesDataAccess\CurrenciesDataAccess.csproj">
-      <Project>{E7CC3727-493A-4905-94DE-D2CF692273A3}</Project>
-      <Name>CurrenciesDataAccess</Name>
-    </ProjectReference>
+    <Content Include="Entities\Models.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Models.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

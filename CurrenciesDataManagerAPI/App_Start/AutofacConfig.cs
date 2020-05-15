@@ -6,9 +6,10 @@ using System.Web;
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
-using CurrenciesDataAccess.Models;
 using CurrenciesDataAccess.Repositories;
+using CurrenciesDataManagerLibrary.Entities;
 using CurrenciesDataManagerLibrary.Processor;
+using CurrenciesDataManagerLibrary.Repositories;
 
 namespace CurrenciesDataManagerAPI.App_Start
 {
@@ -39,11 +40,11 @@ namespace CurrenciesDataManagerAPI.App_Start
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             builder.RegisterType<DatesRangeRepository>()
-               .As<DatesRangeRepository>()
+               .As<IDatesRangeRepository>()
                .InstancePerLifetimeScope();
 
-            builder.RegisterType<CurrenciesRepository>()
-               .As<ICurrenciesRepository>()
+            builder.RegisterType<CurrenciesListRepository>()
+               .As<ICurrenciesListRepository>()
                .InstancePerLifetimeScope();
 
             builder.RegisterType<CurrenciesRateRepository>()

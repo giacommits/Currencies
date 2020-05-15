@@ -56,43 +56,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\CurrenciesRate.cs">
-      <DependentUpon>Models.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Currency.cs">
-      <DependentUpon>Models.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DatesRange.cs" />
-    <Compile Include="Models\Models.Context.cs">
+    <Compile Include="Context\Models.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Models.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Models.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Models.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Models.Designer.cs">
+    <Compile Include="Context\Models.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Models.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CurrenciesRateRepository.cs" />
-    <Compile Include="Repositories\CurrenciesRepository.cs" />
-    <Compile Include="Repositories\ICurrenciesRepository.cs" />
-    <Compile Include="Repositories\ICurrenciesRateRepository.cs" />
-    <Compile Include="Repositories\IDatesRangeRepository.cs" />
+    <Compile Include="Repositories\CurrenciesListRepository.cs" />
     <Compile Include="Repositories\DatesRangeRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="Models\Models.edmx">
+    <EntityDeploy Include="Context\Models.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Models.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="Models\Models.edmx.diagram">
+    <None Include="Context\Models.edmx.diagram">
       <DependentUpon>Models.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
@@ -100,17 +85,18 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="Models\Models.Context.tt">
+    <ProjectReference Include="..\CurrenciesDataManagerLibrary\CurrenciesDataManagerLibrary.csproj">
+      <Project>{fd5cc808-52cd-422d-b43b-6288ee33f62a}</Project>
+      <Name>CurrenciesDataManagerLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Context\Models.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Models.edmx</DependentUpon>
       <LastGenOutput>Models.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\Models.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Models.edmx</DependentUpon>
-      <LastGenOutput>Models.cs</LastGenOutput>
+      <CustomToolNamespace>CurrenciesDataManagerLibrary.Entities</CustomToolNamespace>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

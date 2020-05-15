@@ -1,6 +1,4 @@
-﻿using CurrenciesDataAccess.Models;
-using CurrenciesDataAccess.Repositories;
-using CurrenciesDataManagerLibrary.Models;
+﻿using CurrenciesDataManagerLibrary.Models;
 using CurrenciesDataManagerLibrary.Processor;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
