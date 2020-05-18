@@ -86,7 +86,7 @@ namespace WPFCuerrenciesUI.Views
                     }
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 MessageBox.Show("Invalid date", "Error");
                 Date.Text = Date.SelectedDate.ToString();
