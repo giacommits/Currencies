@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,9 +29,14 @@ namespace CurrenciesLibrary.CurrenciesUtilities
             //returns a null object exception for the UI project, so we are using File.ReadAllText instead till 
             //the bug is fixed. Tests for this class are temporaly commented out.
 
-            
+            //var buildDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //var filePath = buildDir + @"\dictionary.json";
 
-            using (var reader = File.OpenText("dictionary.json"))
+            var appDomain = System.AppDomain.CurrentDomain;
+            var basePath = appDomain.RelativeSearchPath ?? appDomain.BaseDirectory;
+            var filePath = Path.Combine(basePath, "dictionary.json");
+
+            using (var reader = File.OpenText(filePath))
             {
                 var fileText = await reader.ReadToEndAsync();
                 return JsonConvert.DeserializeObject<Dictionary<string, string>>(fileText);

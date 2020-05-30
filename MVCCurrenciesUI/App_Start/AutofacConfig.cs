@@ -1,5 +1,8 @@
 ﻿using Autofac;
 using Autofac.Integration.Mvc;
+using CurrenciesLibrary.CurrenciesAPI;
+using CurrenciesLibrary.CurrenciesUtilities;
+using MVCCurrenciesUI.Controllers.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,11 @@ namespace MVCCurrenciesUI.App_Start
 
             // Register dependencies in controllers
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterType<CurrenciesList>().As<ICurrenciesList>().InstancePerLifetimeScope();
+            builder.RegisterType<APIHelper>().As<IAPIHelper>().SingleInstance();
+            builder.RegisterType<CurrenciesListHelper>().As<ICurrenciesListHelper>().InstancePerLifetimeScope();
+            builder.RegisterType<DatesRangeHelper>().As<IDatesRangeHelper>().InstancePerLifetimeScope();
+            builder.RegisterType<RateHelper>().As<IRateHelper>().InstancePerLifetimeScope();
 
             
 

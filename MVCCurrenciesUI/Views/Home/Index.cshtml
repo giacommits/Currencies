@@ -1,31 +1,234 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model MVCCurrenciesUI.Models.CurrenciesViewModel
+
+@{
+    ViewBag.Title = "Index";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+@using (Html.BeginForm("GetRate", "Home"))
+{
+   // @Html.AntiForgeryToken()
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div class="RateAndDateForm">
+        <span class="baseValue">
+            @Html.EditorFor(model => model.BaseValue, new { htmlAttributes = new { autocomplete = "off", @class = "form-control", @id = "baseValue" } })
+        </span>
+        <span class="baseCurrency">
+            @Html.DropDownListFor(model => model.SelectedBase, new SelectList((Session["CurrenciesList"]) as List<string>), new { @id = "baseCurrency" })
+        </span>
+        <div>
+            @Html.EditorFor(model => model.QuoteValue, new { htmlAttributes = new { autocomplete = "off", @class = "form-control", @id = "quoteValue" } })
+            @Html.DropDownListFor(model => model.SelectedQuote, new SelectList((Session["CurrenciesList"]) as List<string>), new { @id = "quoteCurrency" })
+
+        </div>
+        <div>
+            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "datepicker", } })
+            @Html.HiddenFor(model => model.StartDate)
+            @Html.HiddenFor(model => model.EndDate)
+        </div>
+        @Html.HiddenFor(model => model.Rate )
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+}
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+                $(".datepicker").attr('readonly', true).datepicker({
+
+                    altFormat: "dd-mm-yy",
+                    dateFormat: "dd-mm-yy",
+                    changeMonth: true,
+                    changeYear: true,
+                    constrainInput: true,
+                    yearRange: "@Model.StartDate.Year:@Model.EndDate.Year",
+                    minDate: new Date( @Model.StartDate.Year, @Model.StartDate.Month - 1, @Model.StartDate.Day),
+                    maxDate: new Date(@Model.EndDate.Year, @Model.EndDate.Month - 1, @Model.EndDate.Day),
+                    disabled: false,
+                    onSelect: function (dateText, inst) {
+                        if (dateText != "@Model.Date.ToString("dd-MM-yyyy")") {
+                            getRate();
+                        }
+                    }
+                }).datepicker("setDate", new Date(@Model.Date.Year, @Model.Date.Month - 1, @Model.Date.Day ));
+            });
+
+
+
+        $(document).ready(function () {
+                $("input[type='text']").keypress(function (event) {
+                    if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                        event.preventDefault();
+                    }
+                });
+            });
+
+
+        $(document).ready(function () {
+                var lastValue = "";
+                $("#baseValue").on('keyup paste', function () {
+                    if (isNaN($(this).val())) {
+                        alert("Not a valid number!");
+                        $("input:text").val("");
+                    }
+                    else if ($(this).val() != lastValue) {
+                        lastValue = $(this).val();
+                        calculateQuoteValue();
+                    }
+                });
+            });
+
+           
+
+        $(document).ready(function () {
+                var lastValue = "";
+                $("#quoteValue").on('keyup paste', function () {
+                    if (isNaN($(this).val())) {
+                        alert("Not a valid number!");
+                        $("input:text").val("");
+                    }
+                    else if ($(this).val() != lastValue) {
+                        lastValue = $(this).val();
+                        calculateBaseValue();
+                    }
+                });
+            });
+
+           
+
+        $(document).ready(function () {
+                var lastValue;
+
+                $("select").on("keyup mouseup", function () {
+                    if ($(this).closest("select").attr("id") == "baseCurrency") {
+                        lastValue = "@Model.SelectedBase";
+                    }
+                    if ($(this).closest("select").attr("id") == "quoteCurrency") {
+                        lastValue = "@Model.SelectedQuote";
+                    }
+                    if ($(this).val() != lastValue) {
+                        // $("form").submit();
+                        getRate();
+                    }
+                });
+            });
+
+        $(document).ready(function () {
+                $("#Rate").change(calculateQuoteValue());
+            });
+
+
+
+        var getRate = function () {
+                var url = "@Url.Action("GetRate")";
+                var data = $("form").serialize();
+                $.post(url, data).done(function (result) {
+                    $("#Rate").val(result);
+                    calculateQuoteValue();
+                }).fail(function () {
+                    alert("error");
+                });
+        }
+
+        var calculateQuoteValue = function () {
+            if ($("#baseValue").val() == "") {
+                $("#quoteValue").val("");
+            }
+            else {
+                var baseValue = parseFloat($("#baseValue").val());
+                var rate = parseFloat($("#Rate").val());
+                $("#quoteValue").val(parseFloat((baseValue * rate).toFixed(4)));
+            }
+        }
+
+        var calculateBaseValue = function () {
+            if ($("#quoteValue").val() == "") {
+                $("#baseValue").val("");
+            }
+            else {
+                var quoteValue = parseFloat($("#quoteValue").val());
+                var rate = parseFloat($("#Rate").val());
+                $("#baseValue").val(parseFloat((quoteValue / rate).toFixed(4)));
+            }
+        }
+
+    </script>
+}
+@*
+
+            <h2>Index</h2>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>RateAndDate</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BaseValue, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.BaseValue, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BaseValue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.QuoteValue, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.QuoteValue, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.QuoteValue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SelectedBase, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SelectedBase, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SelectedBase, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SelectedValue, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SelectedValue, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SelectedValue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+*@
