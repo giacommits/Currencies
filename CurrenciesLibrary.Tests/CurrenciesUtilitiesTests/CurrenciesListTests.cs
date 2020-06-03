@@ -12,54 +12,51 @@ using System.Windows.Forms;
 using Xunit;
 using Xunit.Sdk;
 
-namespace CurrenciesLibrary.Tests.CurrenciesUtilitiesTests
-{
-    //
-    // This test is currently not avilable due to changes in the class that it reference
-    // 
-   
-    /*
-    public class CurrenciesDictionaryTests
-    {
-        [Fact]
-        public void GetDictionary_ShouldReturnJobject()
-        {
-           using (var mock = AutoMock.GetLoose())
-            {
-                mock.Mock<IFileSystem>().Setup(x => x.File.ReadAllText("dictionary.json"))
-                    .Returns(JsonConvert.SerializeObject(dic));
+//Temporaly commented out due to changes in tested class.
 
-                var cls = mock.Create<CurrenciesDictionary>();
-                var expected = dic;
-                var actual = cls.GetDictionary();
+//namespace CurrenciesLibrary.Tests.CurrenciesUtilitiesTests
+//{
+//    public class CurrenciesDictionaryTests
+//    {
+//        [Fact]
+//        public async void GetDictionary_ShouldReturnJobject()
+//        {
+//           using (var mock = AutoMock.GetLoose())
+//            {
+//                mock.Mock<IFileSystem>().Setup(x => x.File.OpenText("dictionary.json"))
+//                    .Returns(JsonConvert.SerializeObject(dic));
 
-                Assert.True(actual != null);
-                Assert.Equal(expected, actual);
+//                var cls = mock.Create<CurrenciesList>();
+//                var expected = dic;
+//                var actual = await cls.GetCurrenciesListAsync();
+
+//                Assert.True(actual != null);
+//                Assert.Equal(expected, actual);
                 
-            }
-        }
+//            }
+//        }
 
-        Dictionary<string, string> dic = new Dictionary<string, string>
-        {
-            { "CAD",   "Canadian Dollar" },
-            {"HKD",    "Hong Kong Dollar" }
-        };
+//        Dictionary<string, string> dic = new Dictionary<string, string>
+//        {
+//            { "CAD",   "Canadian Dollar" },
+//            {"HKD",    "Hong Kong Dollar" }
+//        };
 
 
-        [Fact]
-        public void GetDictionary_ShouldThrowException()
-        {
-            using (var mock = AutoMock.GetLoose())
-            {
-                mock.Mock<IFileSystem>().Setup(x => x.File.ReadAllText("dictionary.json"))
-                    .Returns(()=> throw new Exception());
+//        [Fact]
+//        public async void GetDictionary_ShouldThrowException()
+//        {
+//            using (var mock = AutoMock.GetLoose())
+//            {
+//                mock.Mock<IFileSystem>().Setup(x => x.File.ReadAllText("dictionary.json"))
+//                    .Returns(()=> throw new Exception());
 
-                var cls = mock.Create<CurrenciesDictionary>();
+//                var cls = mock.Create<CurrenciesList>();
 
-                Assert.Throws<Exception>(()=> cls.GetDictionary());
+//                await Assert.ThrowsAsync<Exception>(async ()=>await  cls.GetCurrenciesListAsync());
 
-            }
-        }
+//            }
+//        }
 
-    }*/
-}
+//    }
+//}

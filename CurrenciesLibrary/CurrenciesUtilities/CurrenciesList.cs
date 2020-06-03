@@ -16,7 +16,10 @@ namespace CurrenciesLibrary.CurrenciesUtilities
     {
         //Implementation of System.IO.Abstractions for testings purposes
         IFileSystem _fileSystem;
-        public CurrenciesList() : this (new FileSystem()) { }
+        public CurrenciesList() 
+        {
+            _fileSystem = new FileSystem();
+        }
         
 
         public CurrenciesList(IFileSystem fileSystem)
@@ -25,21 +28,31 @@ namespace CurrenciesLibrary.CurrenciesUtilities
         }
         public async Task<Dictionary<string, string>> GetCurrenciesListAsync()
         {
-            //For some reason _fileSystem.File.ReadAllText("dictionary.json") while it works for the Tests project,
-            //returns a null object exception for the UI project, so we are using File.ReadAllText instead till 
-            //the bug is fixed. Tests for this class are temporaly commented out.
-
-            //var buildDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            //var filePath = buildDir + @"\dictionary.json";
-
-            var appDomain = System.AppDomain.CurrentDomain;
+            //This is for accesing the file when the Library is used both from a desktop app, and a web app.
+            var appDomain = AppDomain.CurrentDomain;
             var basePath = appDomain.RelativeSearchPath ?? appDomain.BaseDirectory;
             var filePath = Path.Combine(basePath, "dictionary.json");
 
-            using (var reader = File.OpenText(filePath))
+
+            if (_fileSystem != null)
             {
-                var fileText = await reader.ReadToEndAsync();
-                return JsonConvert.DeserializeObject<Dictionary<string, string>>(fileText);
+            //For some reason using  _fileSystem, while it works fine when the Library is called from the MVCCurrenciesUI project 
+            //and for the Tests project, it returns system.nullreferenceexception when called from the WPFCurrenciesUI project,
+            //so with this workaround we can run both UI projects and tests project without errors.
+
+                using (var reader = _fileSystem.File.OpenText(filePath))
+                {
+                    var fileText = await reader.ReadToEndAsync();
+                    return JsonConvert.DeserializeObject<Dictionary<string, string>>(fileText);
+                }
+            }
+            else
+            {
+                using (var reader = File.OpenText(filePath))
+                {
+                    var fileText = await reader.ReadToEndAsync();
+                    return JsonConvert.DeserializeObject<Dictionary<string, string>>(fileText);
+                }
             }
 
             
