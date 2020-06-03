@@ -20,18 +20,18 @@ namespace CurrenciesLibrary.CurrenciesAPI
             InitializeClient();
         }
 
-        public bool InternalApi { get; set; }
+        public bool UseLocalApi { get; set; }
         private void InitializeClient()
         {
             //Checks to see wich API will use
-            string api = ConfigurationManager.AppSettings["InternalApi"];
+            string api = ConfigurationManager.AppSettings["LocalApi"];
             if (api == "")
             {
-                api = ConfigurationManager.AppSettings["PublicApi"];
+                api = ConfigurationManager.AppSettings["RemoteApi"];
             }
             else
             {
-                InternalApi = true;
+                UseLocalApi = true;
             }
 
             ApiClient = new HttpClient();

@@ -28,7 +28,7 @@ namespace MVCCurrenciesUI.Controllers.Helpers
 			Dictionary<string, string> currenciesDictionary = new Dictionary<string, string>();
 
 			//If app.config is set to utilize internal API it get the list of avilables currencies from one of its endpoints.
-			if (_apiHelper.InternalApi)
+			if (_apiHelper.UseLocalApi)
 			{
 				currenciesDictionary = await _apiHelper.GetCurrenciesListFromApiAsync();
 			}

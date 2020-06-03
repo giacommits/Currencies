@@ -20,7 +20,7 @@ namespace MVCCurrenciesUI.Controllers.Helpers
 
 		public async Task<DatesRangeUIModel> GetDatesRangeAsync()
 		{
-			if (_apiHelper.InternalApi)
+			if (_apiHelper.UseLocalApi)
 			{
 				return await _apiHelper.GetDatesRangeAsync();
 			}
@@ -28,7 +28,7 @@ namespace MVCCurrenciesUI.Controllers.Helpers
 			{
 				DatesRangeUIModel model = new DatesRangeUIModel
 				{
-					StartDate = DateTime.Parse(ConfigurationManager.AppSettings["PublicApiStartDate"]),
+					StartDate = DateTime.Parse(ConfigurationManager.AppSettings["RemoteApiStartDate"]),
 					EndDate = DateTime.Now,
 				};
 
