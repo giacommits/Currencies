@@ -18,13 +18,29 @@ namespace MVCCurrenciesUI.Controllers.Helpers
 
         public async Task<string> GetRateAsync(string selectedBase, string selectedQuote, DateTime date)
         {
-            string baseCurrency = new string((selectedBase.ToString().Substring(selectedBase.Length - 4, 3).ToArray()));
-            string quoteCurrency = new string((selectedQuote.Substring(selectedQuote.Length - 4, 3).ToArray()));
-            var model = await _apiHelper.GetRateFromAPIAsync(baseCurrency, quoteCurrency, date.ToString("yyyy-MM-dd"));
-            var info = new NumberFormatInfo();
-            info.NumberDecimalSeparator = ".";
+            if (selectedBase == selectedQuote)
+            {
+                return "1";
+            }
+            else
+            {
+                string baseCurrency;
+                string quoteCurrency;
+                try
+                {
+                    baseCurrency = new string((selectedBase.ToString().Substring(selectedBase.Length - 4, 3).ToArray()));
+                    quoteCurrency = new string((selectedQuote.Substring(selectedQuote.Length - 4, 3).ToArray()));
+                }
+                catch 
+                {
+                    throw new Exception("Invalid currencies names");
+                }
+                var model = await _apiHelper.GetRateFromAPIAsync(baseCurrency, quoteCurrency, date.ToString("yyyy-MM-dd"));
+                var info = new NumberFormatInfo();
+                info.NumberDecimalSeparator = ".";
 
-            return (model.Rates.First().Value).ToString(info);
+                return (model.Rates.First().Value).ToString(info);
+            }
         }
     }
 }

@@ -29,47 +29,39 @@ namespace MVCCurrenciesUI.Controllers
         public async Task<ActionResult> Index(CurrenciesViewModel model)
         {
 
-            ModelState.Clear();
-            if (model.Rate == null)
-            {
-                List<string> currenciesList = await _currenciesListHelper.GetCurrenciesListAsync();               
-               
-                model.SelectedBase = currenciesList.FirstOrDefault
-                         (x => x.Contains(ConfigurationManager.AppSettings["DefaultBase"]));
+            List<string> currenciesList = await _currenciesListHelper.GetCurrenciesListAsync();
 
-                model.SelectedQuote = currenciesList.FirstOrDefault
-                        (x => x.Contains(ConfigurationManager.AppSettings["DefaultQuote"]));
+            model.SelectedBase = currenciesList.FirstOrDefault
+                     (x => x.Contains(ConfigurationManager.AppSettings["DefaultBase"]));
 
-                //Or defaults
-                if (model.SelectedBase == null)
-                    model.SelectedBase = currenciesList[0];
+            model.SelectedQuote = currenciesList.FirstOrDefault
+                    (x => x.Contains(ConfigurationManager.AppSettings["DefaultQuote"]));
 
-                if (model.SelectedQuote == null)
-                    model.SelectedQuote = currenciesList[1];
+            //Or defaults
+            if (model.SelectedBase == null)
+                model.SelectedBase = currenciesList[0];
 
-                DatesRangeUIModel datesRangeModel = await _datesRangeHelper.GetDatesRangeAsync();
-                model.StartDate = DateTime.Parse(datesRangeModel.StartDate.ToString("dd-MM-yyyy"));
-                model.EndDate = DateTime.Parse(datesRangeModel.EndDate.ToString("dd-MM-yyyy"));
-                model.Date = model.EndDate;
-                Session["CurrenciesList"] = currenciesList;
-            }
+            if (model.SelectedQuote == null)
+                model.SelectedQuote = currenciesList[1];
 
+            DatesRangeUIModel datesRangeModel = await _datesRangeHelper.GetDatesRangeAsync();
+            model.StartDate = DateTime.Parse(datesRangeModel.StartDate.ToString("dd-MM-yyyy"));
+            model.EndDate = DateTime.Parse(datesRangeModel.EndDate.ToString("dd-MM-yyyy"));
+            model.Date = model.EndDate;
+            Session["CurrenciesList"] = currenciesList;
 
             model.Rate = await _rateHelper.GetRateAsync(model.SelectedBase, model.SelectedQuote, model.Date);
-           
-            //System.Threading.Thread.Sleep(4000);
+
             return View(model);
         }
 
-        
-        [HttpPost]
-       // [ValidateAntiForgeryToken]
-        public async Task<ContentResult> GetRate(CurrenciesViewModel model)
+
+        [HttpGet]
+        public async Task<JsonResult> GetRate(CurrenciesViewModel model)
         {
             ModelState.Clear();
             string rate = await _rateHelper.GetRateAsync(model.SelectedBase, model.SelectedQuote, model.Date);
-                        
-            return Content(rate);
+            return Json(rate, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -1,34 +1,48 @@
 ﻿@model MVCCurrenciesUI.Models.CurrenciesViewModel
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Currencies";
 }
 
 @using (Html.BeginForm("GetRate", "Home"))
 {
-   // @Html.AntiForgeryToken()
+    <br/>
 
-    <div class="RateAndDateForm">
-        <span class="baseValue">
-            @Html.EditorFor(model => model.BaseValue, new { htmlAttributes = new { autocomplete = "off", @class = "form-control", @id = "baseValue" } })
-        </span>
-        <span class="baseCurrency">
-            @Html.DropDownListFor(model => model.SelectedBase, new SelectList((Session["CurrenciesList"]) as List<string>), new { @id = "baseCurrency" })
-        </span>
-        <div>
-            @Html.EditorFor(model => model.QuoteValue, new { htmlAttributes = new { autocomplete = "off", @class = "form-control", @id = "quoteValue" } })
-            @Html.DropDownListFor(model => model.SelectedQuote, new SelectList((Session["CurrenciesList"]) as List<string>), new { @id = "quoteCurrency" })
-
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2 col-xs-3">
+                @Html.EditorFor(model => model.BaseValue, new { htmlAttributes = new { autocomplete = "off", @class = "form-control", @id = "baseValue", style = "height:34px" } })
+            </div>
+            <div class="col-xs-1">
+                @Html.DropDownListFor(model => model.SelectedBase, new SelectList((Session["CurrenciesList"]) as List<string>), new { @id = "baseCurrency", style = "height:34px" })
+            </div>
         </div>
+        <br />
+        <div class="row">
+            <div class="col-sm-2 col-xs-3">
+                @Html.EditorFor(model => model.QuoteValue, new { htmlAttributes = new { autocomplete = "off", @class = "form-control", @id = "quoteValue", style = "height:34px" } })
+            </div>
+            <div class="col-xs-1">
+                @Html.DropDownListFor(model => model.SelectedQuote, new SelectList((Session["CurrenciesList"]) as List<string>), new { @id = "quoteCurrency", style = "height:34px" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <span class="col-xs-1 col-sm-offset-2 col-xs-offset-3">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "datepicker",@id = "date", style = "height:34px" } })
+            </span>
+        </div>
+
         <div>
-            @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "datepicker", } })
             @Html.HiddenFor(model => model.StartDate)
             @Html.HiddenFor(model => model.EndDate)
+            @Html.HiddenFor(model => model.Rate)
         </div>
-        @Html.HiddenFor(model => model.Rate )
+
     </div>
 
 }
+
 
 <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
 
@@ -43,8 +57,7 @@
         $(document).ready(function () {
                 $(".datepicker").attr('readonly', true).datepicker({
 
-                    altFormat: "dd-mm-yy",
-                    dateFormat: "dd-mm-yy",
+                    dateFormat: "yy-mm-dd",
                     changeMonth: true,
                     changeYear: true,
                     constrainInput: true,
@@ -53,7 +66,8 @@
                     maxDate: new Date(@Model.EndDate.Year, @Model.EndDate.Month - 1, @Model.EndDate.Day),
                     disabled: false,
                     onSelect: function (dateText, inst) {
-                        if (dateText != "@Model.Date.ToString("dd-MM-yyyy")") {
+                        if (dateText != date) {
+                            date = dateText;
                             getRate();
                         }
                     }
@@ -85,7 +99,7 @@
                 });
             });
 
-           
+
 
         $(document).ready(function () {
                 var lastValue = "";
@@ -101,17 +115,19 @@
                 });
             });
 
-           
+
 
         $(document).ready(function () {
-                var lastValue;
+            var lastValue;
 
                 $("select").on("keyup mouseup", function () {
                     if ($(this).closest("select").attr("id") == "baseCurrency") {
-                        lastValue = "@Model.SelectedBase";
+                        lastValue = lastSelectedBase;
+                        lastSelectedBase = $("#baseCurrency").val();
                     }
                     if ($(this).closest("select").attr("id") == "quoteCurrency") {
-                        lastValue = "@Model.SelectedQuote";
+                        lastValue = lastSelectedQuote;
+                        lastSelectedQuote = $("#quoteCurrency").val();
                     }
                     if ($(this).val() != lastValue) {
                         // $("form").submit();
@@ -125,16 +141,30 @@
             });
 
 
+        var lastSelectedBase = $("#baseCurrency").val();
+        var lastSelectedQuote = $("#quoteCurrency").val();
+        var lastSelectedDate = $("#date").val();
 
         var getRate = function () {
-                var url = "@Url.Action("GetRate")";
-                var data = $("form").serialize();
-                $.post(url, data).done(function (result) {
+            var url = "@Url.Action("GetRate")";
+            var data = $("form").serialize();
+            $('form :input').prop("disabled", true);
+            $.get(url, data).done(function (result) {
+                $('form :input').prop("disabled", false)
                     $("#Rate").val(result);
                     calculateQuoteValue();
-                }).fail(function () {
-                    alert("error");
+            }).fail(function (err) {
+                $('form :input').prop("disabled", false);
+                $('#baseValue').prop('disabled', true);
+                $('#quoteValue').prop('disabled', true);
+                    alert("Sorry, couldn't retrieve the result: " + err.status + " " + err.statusText);
+                    $("#quoteValue").val("");
+                    $("#baseValue").val("1");
                 });
+        }
+
+        var disableControls = function () {
+
         }
 
         var calculateQuoteValue = function () {
