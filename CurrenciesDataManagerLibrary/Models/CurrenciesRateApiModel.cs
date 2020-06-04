@@ -11,9 +11,9 @@ namespace CurrenciesDataManagerLibrary.Models
     {
         public CurrenciesRateApiModel()
         {
-            rates = new Dictionary<string, decimal>();
+            Rates = new Dictionary<string, decimal>();
         }
-        public Dictionary<string,decimal> rates { get; set; }
+        public Dictionary<string,decimal> Rates { get; set; }
         public string Base { get; set; }
         public string Date { get; set; }
     }

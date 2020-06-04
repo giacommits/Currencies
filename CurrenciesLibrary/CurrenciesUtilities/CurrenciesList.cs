@@ -16,11 +16,7 @@ namespace CurrenciesLibrary.CurrenciesUtilities
     {
         //Implementation of System.IO.Abstractions for testings purposes
         IFileSystem _fileSystem;
-        public CurrenciesList() 
-        {
-            _fileSystem = new FileSystem();
-        }
-        
+        public CurrenciesList() : this(new FileSystem()) { }        
 
         public CurrenciesList(IFileSystem fileSystem)
         {
@@ -36,9 +32,9 @@ namespace CurrenciesLibrary.CurrenciesUtilities
 
             if (_fileSystem != null)
             {
-            //For some reason using  _fileSystem, while it works fine when the Library is called from the MVCCurrenciesUI project 
-            //and for the Tests project, it returns system.nullreferenceexception when called from the WPFCurrenciesUI project,
-            //so with this workaround we can run both UI projects and tests project without errors.
+            //For some reason using  _fileSystem, while it works fine when the Library is called from the MVCCurrenciesUI project,
+            //it returns System.NullReferenceException when called from the WPFCurrenciesUI project,
+            //so for now we use this workaround.
 
                 using (var reader = _fileSystem.File.OpenText(filePath))
                 {

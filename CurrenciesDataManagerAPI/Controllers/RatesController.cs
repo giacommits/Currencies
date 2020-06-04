@@ -24,6 +24,7 @@ namespace CurrenciesDataManagerAPI.Controllers
             _dataProcessor = dataProcessor;
         }
 
+        //Emulates remote API's (https://api.exchangeratesapi.io) endpoint
         [Route("{date}")]
         public async Task<CurrenciesRateApiModel> Get(string date)
         {

@@ -28,7 +28,7 @@ namespace CurrenciesDataManagerLibrary.Processor
 
             decimal rate = await _currenciesRateRepository.GetRateAsync(baseCurrency, quoteCurrency, date);
             CurrenciesRateApiModel apiModel = new CurrenciesRateApiModel();
-            apiModel.rates.Add(baseCurrency, rate);
+            apiModel.Rates.Add(quoteCurrency, rate);
             apiModel.Base = baseCurrency;
             apiModel.Date = date;
 
