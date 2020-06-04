@@ -17,7 +17,7 @@ If you want to run with the local API, first you should create the database with
 Finally in Web.Config file from CurrenciesDataManagerAPI project, make sure that the connection string points to your SQL server. When you run, the UI project will automatically use the Internal API.
 The database cointains only sample data, with a few currencies avilables and only 2 days of exchange rates between them.
 
-
+![Screenshot](https://github.com/giacommits/Currencies/blob/master/Images/MVCscreenshot.png)
 ![Screenshot](https://github.com/giacommits/Currencies/blob/master/Images/screenshot.png)
 
-![Screenshot](https://github.com/giacommits/Currencies/blob/master/Images/MVCscreenshot.png)
+
