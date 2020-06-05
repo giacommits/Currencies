@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace CurrenciesLibrary.CurrenciesUtilities
 {
-    //Get a Dictionary with the avilables currencies ("CAD": "Canadian Dollars") from a json file 
-    //since the API doesn't have such endpoint.
+    //When using remote API, gets a Dictionary with the avilables currencies ("CAD": "Canadian Dollars") from a json file 
+    //since the remote API doesn't have such endpoint.
     public class CurrenciesList : ICurrenciesList   
     {
         //Implementation of System.IO.Abstractions for testings purposes

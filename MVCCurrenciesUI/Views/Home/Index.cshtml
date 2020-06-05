@@ -57,7 +57,7 @@
         $(document).ready(function () {
                 $(".datepicker").attr('readonly', true).datepicker({
 
-                    dateFormat: "yy-mm-dd",
+                    dateFormat: 'yy-mm-dd',
                     changeMonth: true,
                     changeYear: true,
                     constrainInput: true,
@@ -71,11 +71,11 @@
                             getRate();
                         }
                     }
-                }).datepicker("setDate", new Date(@Model.Date.Year, @Model.Date.Month - 1, @Model.Date.Day ));
+                }).datepicker('setDate', new Date(@Model.Date.Year, @Model.Date.Month - 1, @Model.Date.Day ));
             });
 
 
-
+        //Real time validation, allows only digits and one '.' for decimals in textboxes
         $(document).ready(function () {
                 $("input[type='text']").keypress(function (event) {
                     if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
@@ -84,13 +84,13 @@
                 });
             });
 
-
+        //Validate textbox in case of copy paste, check if the value has changes and if so it calls the calculate method
         $(document).ready(function () {
                 var lastValue = "";
-                $("#baseValue").on('keyup paste', function () {
+                $('#baseValue').on('keyup paste', function () {
                     if (isNaN($(this).val())) {
-                        alert("Not a valid number!");
-                        $("input:text").val("");
+                        alert('Not a valid number!');
+                        $('input:text').val("");
                     }
                     else if ($(this).val() != lastValue) {
                         lastValue = $(this).val();
@@ -100,13 +100,13 @@
             });
 
 
-
+         //Validate textbox in case of copy paste, check if the value has changes and if so it calls the calculate method
         $(document).ready(function () {
                 var lastValue = "";
-                $("#quoteValue").on('keyup paste', function () {
+                $('#quoteValue').on('keyup paste', function () {
                     if (isNaN($(this).val())) {
-                        alert("Not a valid number!");
-                        $("input:text").val("");
+                        alert('Not a valid number!');
+                        $('input:text').val("");
                     }
                     else if ($(this).val() != lastValue) {
                         lastValue = $(this).val();
@@ -116,149 +116,76 @@
             });
 
 
-
+        //React in real time to the changes of the dropdown lists calling the getRate method
         $(document).ready(function () {
             var lastValue;
 
-                $("select").on("keyup mouseup", function () {
-                    if ($(this).closest("select").attr("id") == "baseCurrency") {
+                $('select').on('keyup mouseup', function () {
+                    if ($(this).closest('select').attr('id') == 'baseCurrency') {
                         lastValue = lastSelectedBase;
-                        lastSelectedBase = $("#baseCurrency").val();
+                        lastSelectedBase = $('#baseCurrency').val();
                     }
-                    if ($(this).closest("select").attr("id") == "quoteCurrency") {
+                    if ($(this).closest('select').attr('id') == 'quoteCurrency') {
                         lastValue = lastSelectedQuote;
-                        lastSelectedQuote = $("#quoteCurrency").val();
+                        lastSelectedQuote = $('#quoteCurrency').val();
                     }
                     if ($(this).val() != lastValue) {
-                        // $("form").submit();
                         getRate();
                     }
                 });
             });
 
+        //Calls calculate method automatically when the rate changes
         $(document).ready(function () {
-                $("#Rate").change(calculateQuoteValue());
+                $('#Rate').change(calculateQuoteValue());
             });
 
 
-        var lastSelectedBase = $("#baseCurrency").val();
-        var lastSelectedQuote = $("#quoteCurrency").val();
-        var lastSelectedDate = $("#date").val();
+        var lastSelectedBase = $('#baseCurrency').val();
+        var lastSelectedQuote = $('#quoteCurrency').val();
+        var lastSelectedDate = $('#date').val();
 
+        //AJAX call for getting the rate, it disables the form controls while doing so.
         var getRate = function () {
-            var url = "@Url.Action("GetRate")";
-            var data = $("form").serialize();
-            $('form :input').prop("disabled", true);
+            var url = '@Url.Action("GetRate")';
+            var data = $('form').serialize();
+            $('form :input').prop('disabled', true);
             $.get(url, data).done(function (result) {
-                $('form :input').prop("disabled", false)
-                    $("#Rate").val(result);
+                $('form :input').prop('disabled', false)
+                    $('#Rate').val(result);
                     calculateQuoteValue();
             }).fail(function (err) {
-                $('form :input').prop("disabled", false);
+                $('form :input').prop('disabled', false);
                 $('#baseValue').prop('disabled', true);
                 $('#quoteValue').prop('disabled', true);
                     alert("Sorry, couldn't retrieve the result: " + err.status + " " + err.statusText);
-                    $("#quoteValue").val("");
-                    $("#baseValue").val("1");
+                    $('#quoteValue').val("");
+                    $('#baseValue').val("1");
                 });
         }
 
-        var disableControls = function () {
-
-        }
-
         var calculateQuoteValue = function () {
-            if ($("#baseValue").val() == "") {
-                $("#quoteValue").val("");
+            if ($('#baseValue').val() == "") {
+                $('#quoteValue').val("");
             }
             else {
-                var baseValue = parseFloat($("#baseValue").val());
-                var rate = parseFloat($("#Rate").val());
-                $("#quoteValue").val(parseFloat((baseValue * rate).toFixed(4)));
+                var baseValue = parseFloat($('#baseValue').val());
+                var rate = parseFloat($('#Rate').val());
+                $('#quoteValue').val(parseFloat((baseValue * rate).toFixed(4)));
             }
         }
 
         var calculateBaseValue = function () {
-            if ($("#quoteValue").val() == "") {
-                $("#baseValue").val("");
+            if ($('#quoteValue').val() == "") {
+                $('#baseValue').val("");
             }
             else {
-                var quoteValue = parseFloat($("#quoteValue").val());
-                var rate = parseFloat($("#Rate").val());
-                $("#baseValue").val(parseFloat((quoteValue / rate).toFixed(4)));
+                var quoteValue = parseFloat($('#quoteValue').val());
+                var rate = parseFloat($('#Rate').val());
+                $('#baseValue').val(parseFloat((quoteValue / rate).toFixed(4)));
             }
         }
 
     </script>
 }
-@*
 
-            <h2>Index</h2>
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-
-            <div class="form-horizontal">
-                <h4>RateAndDate</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BaseValue, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.BaseValue, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.BaseValue, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.QuoteValue, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.QuoteValue, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.QuoteValue, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SelectedBase, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.SelectedBase, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.SelectedBase, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SelectedValue, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.SelectedValue, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.SelectedValue, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Save" class="btn btn-default" />
-                    </div>
-                </div>
-            </div>
-        }
-
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-
-
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
-
-*@
