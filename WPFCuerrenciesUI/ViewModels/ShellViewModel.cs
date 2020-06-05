@@ -25,6 +25,8 @@ namespace WPFCuerrenciesUI.ViewModels
 		private IDatesRangeHelper _datesRangeHelper;
 		private DateTime _startDate;
 		private DateTime _endDate;
+		private bool _textBoxesAreEnabled;
+		private bool _comboBoxesAndDatePickerAreEnabled;
 		private BindableCollection<string> _currenciesList = new BindableCollection<string>();
 
 		public ShellViewModel( IDatesRangeHelper dateRangeHelper,
@@ -34,7 +36,7 @@ namespace WPFCuerrenciesUI.ViewModels
 			_currenciesListHelper = currenciesListHelper;
 			_rateHelper = rateHelper;
 			Calculate = new CalculateCommand(Calculator);
-			CallGetRateAsync = new GetRateCommand(GetRateAsync, GetRateCanExecute);			
+			CallGetRateAsync = new GetRateCommand(GetRateAsync, GetRateAsyncCanExecute);			
 		}
 
 		//To avoid calling async method on constructor
@@ -43,7 +45,7 @@ namespace WPFCuerrenciesUI.ViewModels
 			base.OnViewLoaded(view);
 
 			//Changes in controls automatically calls the API for updating values, setting this property to false avoids it
-			CanCallGetRate = false;
+			CanCallGetRateAsync = false;
 
 			//Gets the list of avilables currencies
 			try
@@ -73,18 +75,11 @@ namespace WPFCuerrenciesUI.ViewModels
 					$"the application may not work correctly");
 			}
 
-			CanCallGetRate = true;
+			CanCallGetRateAsync = true;
 
 			//Finally the call to the API is made
-			try
-			{
-				await GetRateAsync();
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message, "Error, could not retrieve data from API");
-			}
-			
+			await GetRateAsync();
+					
 		}
 
        //Sets initial values for comboboxes
@@ -112,21 +107,36 @@ namespace WPFCuerrenciesUI.ViewModels
 		//Gets rate from API and calls the method that will initiates calculations
 		public async Task GetRateAsync()
 		{
+			TextBoxesAreEnabled = false;
+			ComboBoxesAndDatePickerAreEnabled = false;
+
 			if (SelectedBase == SelectedQuote)
 			{
 				QuoteValue = BaseValue;
 				Rate = 1;
 			}
 			else
-			{		
-				Rate = await _rateHelper.GetRateAsync(SelectedBase, SelectedQuote, Date);
-
-				if (BaseValue != "")
+			{
+				if (BaseValue == "")
 				{
+					BaseValue = "1";
+				}
+				try
+				{
+					Rate = await _rateHelper.GetRateAsync(SelectedBase, SelectedQuote, Date);
 					//Default is calulate from base value, although user can calculate from quote value using the
 					//QuoteValue textbox, and CallCalculator will be called with the "QuoteValue" parameter.
 					Calculator("BaseValue");
-				}				
+					TextBoxesAreEnabled = true;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.Message, "Error, could not retrieve data from API");
+					BaseValue = "1";
+					QuoteValue = "";
+				}
+
+				ComboBoxesAndDatePickerAreEnabled = true;
 			}
 		}
 
@@ -190,10 +200,10 @@ namespace WPFCuerrenciesUI.ViewModels
 		public GetRateCommand CallGetRateAsync { get; private set; }
 
 
-		public bool CanCallGetRate { get; set; } = true;
-		public bool GetRateCanExecute()
+		public bool CanCallGetRateAsync { get; set; } = true;
+		public bool GetRateAsyncCanExecute()
 		{
-			return CanCallGetRate;
+			return CanCallGetRateAsync;
 		}
 		
 
@@ -285,5 +295,26 @@ namespace WPFCuerrenciesUI.ViewModels
 			}
 		}
 
+		public bool TextBoxesAreEnabled
+		{
+			get { return _textBoxesAreEnabled; }
+			set
+			{
+				_textBoxesAreEnabled = value;
+
+				NotifyOfPropertyChange(() => TextBoxesAreEnabled);
+			}
+		}		
+
+		public bool ComboBoxesAndDatePickerAreEnabled
+		{
+			get { return _comboBoxesAndDatePickerAreEnabled; }
+			set 
+			{
+				_comboBoxesAndDatePickerAreEnabled = value;
+
+				NotifyOfPropertyChange(() => ComboBoxesAndDatePickerAreEnabled);
+			}
+		}
 	}
 }

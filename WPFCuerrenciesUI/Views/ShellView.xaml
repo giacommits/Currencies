@@ -24,7 +24,7 @@
             <RowDefinition Height="25" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="BaseValue" Grid.Row="1" Grid.Column="1" PreviewTextInput="TextBox_PreviewTextInput" 
+        <TextBox x:Name="BaseValue" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding Path = TextBoxesAreEnabled }" PreviewTextInput="TextBox_PreviewTextInput" 
                  TextChanged="TextBox_Changed" PreviewKeyDown="TextBox_PreviewKeyDown">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="TextChanged">
@@ -33,15 +33,15 @@
             </i:Interaction.Triggers>
             
         </TextBox >
-        <TextBox x:Name="QuoteValue"  Grid.Row="3" Grid.Column="1" PreviewTextInput="TextBox_PreviewTextInput" 
+        <TextBox x:Name="QuoteValue"  Grid.Row="3" Grid.Column="1" IsEnabled="{Binding Path = TextBoxesAreEnabled }" PreviewTextInput="TextBox_PreviewTextInput" 
                  TextChanged="TextBox_Changed" PreviewKeyDown="TextBox_PreviewKeyDown">
             <i:Interaction.Triggers>                
                 <i:EventTrigger EventName="TextChanged">
                     <i:InvokeCommandAction Command="{Binding Calculate}" CommandParameter="QuoteValue"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </TextBox > 
-        <ComboBox x:Name="BaseCurrency" ItemsSource="{Binding CurrenciesList}" SelectedItem="{Binding SelectedBase}" 
+        </TextBox >
+        <ComboBox x:Name="BaseCurrency" IsEnabled="{Binding Path= ComboBoxesAndDatePickerAreEnabled}" ItemsSource="{Binding CurrenciesList}" SelectedItem="{Binding SelectedBase}" 
                   Grid.Row="1" Grid.Column="3">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
@@ -49,7 +49,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
-        <ComboBox x:Name="QuoteCurrency"  ItemsSource="{Binding CurrenciesList}" SelectedItem="{Binding SelectedQuote}" 
+        <ComboBox x:Name="QuoteCurrency" IsEnabled="{Binding Path= ComboBoxesAndDatePickerAreEnabled}" ItemsSource="{Binding CurrenciesList}" SelectedItem="{Binding SelectedQuote}" 
                   Grid.Row="3" Grid.Column="3">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
@@ -58,7 +58,7 @@
             </i:Interaction.Triggers>
         </ComboBox>
         <DatePicker x:Name="Date" Grid.Row="5" Grid.Column="3" DisplayDateEnd="{Binding EndDate}" 
-                    DisplayDateStart="{Binding StartDate}" PreviewKeyDown="Date_PreviewKeyDown">
+                    DisplayDateStart="{Binding StartDate}" IsEnabled="{Binding Path= ComboBoxesAndDatePickerAreEnabled}" PreviewKeyDown="Date_PreviewKeyDown">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedDateChanged">
                     <i:InvokeCommandAction Command="{Binding CallGetRateAsync}" CommandParameter="BaseValue"/>
