@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="CurrenciesApiTests\EndpointUrlTests.cs" />
     <Compile Include="CurrenciesUtilitiesTests\CurrenciesCalcultorTests.cs" />
+    <Compile Include="CurrenciesUtilitiesTests\CurrenciesListTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
